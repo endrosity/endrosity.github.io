@@ -890,104 +890,21 @@
         <!-- Audio element for click sound -->
         <audio id="click-sound" preload="auto"></audio>
 
-<!-- Profile Cards Container -->
-<div class="profile-cards-container">
-    <!-- Profile 1 -->
-    <div class="profile-card" id="profile-card-1">
-        <div class="profile-avatar-container">
-            <div class="avatar-decoration" id="avatar-decoration-1"></div>
-            <div class="profile-avatar" id="profile-1"></div>
+        <!-- Profile Card (Single card that will be replaced by JavaScript) -->
+        <div class="profile-card" id="profile-card">
+            <div class="profile-avatar-container">
+                <div class="avatar-decoration" id="avatar-decoration"></div>
+                <div class="profile-avatar" id="profile"></div>
+            </div>
+            <div class="profile-name-container" id="profile-name-container">
+                <!-- Background and name image will be inserted here by JavaScript -->
+            </div>
+            <p class="profile-role" id="profile-role">Frontend Developer</p>
+            <p class="profile-bio" id="profile-bio">Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.</p>
+            <div class="profile-links" id="profile-links">
+                <!-- Links will be inserted here by JavaScript -->
+            </div>
         </div>
-        <div class="profile-name-container" id="profile-1-name-container">
-            <!-- Background and name image will be inserted here by JavaScript -->
-        </div>
-        <p class="profile-role" id="profile-role-1">Frontend Developer</p>
-        <p class="profile-bio" id="profile-bio-1">Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.</p>
-        <div class="profile-links" id="profile-links-1">
-            <!-- Links will be inserted here by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Profile 2 -->
-    <div class="profile-card" id="profile-card-2">
-        <div class="profile-avatar-container">
-            <div class="avatar-decoration" id="avatar-decoration-2"></div>
-            <div class="profile-avatar" id="profile-2"></div>
-        </div>
-        <div class="profile-name-container" id="profile-2-name-container">
-            <!-- Background and name image will be inserted here by JavaScript -->
-        </div>
-        <p class="profile-role" id="profile-role-2">Backend Developer</p>
-        <p class="profile-bio" id="profile-bio-2">Building robust server solutions and APIs. Passionate about performance optimization and clean code.</p>
-        <div class="profile-links" id="profile-links-2">
-            <!-- Links will be inserted here by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Profile 3 -->
-    <div class="profile-card" id="profile-card-3">
-        <div class="profile-avatar-container">
-            <div class="avatar-decoration" id="avatar-decoration-3"></div>
-            <div class="profile-avatar" id="profile-3"></div>
-        </div>
-        <div class="profile-name-container" id="profile-3-name-container">
-            <!-- Background and name image will be inserted here by JavaScript -->
-        </div>
-        <p class="profile-role" id="profile-role-3">UI/UX Designer</p>
-        <p class="profile-bio" id="profile-bio-3">Creating intuitive user experiences with a focus on aesthetic appeal and usability. Always exploring new design trends.</p>
-        <div class="profile-links" id="profile-links-3">
-            <!-- Links will be inserted here by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Profile 4 -->
-    <div class="profile-card" id="profile-card-4">
-        <div class="profile-avatar-container">
-            <div class="avatar-decoration" id="avatar-decoration-4"></div>
-            <div class="profile-avatar" id="profile-4"></div>
-        </div>
-        <div class="profile-name-container" id="profile-4-name-container">
-            <!-- Background and name image will be inserted here by JavaScript -->
-        </div>
-        <p class="profile-role" id="profile-role-4">DevOps Engineer</p>
-        <p class="profile-bio" id="profile-bio-4">Automating deployment processes and maintaining cloud infrastructure. Loves containers and continuous integration.</p>
-        <div class="profile-links" id="profile-links-4">
-            <!-- Links will be inserted here by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Profile 5 -->
-    <div class="profile-card" id="profile-card-5">
-        <div class="profile-avatar-container">
-            <div class="avatar-decoration" id="avatar-decoration-5"></div>
-            <div class="profile-avatar" id="profile-5"></div>
-        </div>
-        <div class="profile-name-container" id="profile-5-name-container">
-            <!-- Background and name image will be inserted here by JavaScript -->
-        </div>
-        <p class="profile-role" id="profile-role-5">3D Artist</p>
-        <p class="profile-bio" id="profile-bio-5">Creating immersive 3D worlds and characters. Specializes in realistic texturing and environmental design.</p>
-        <div class="profile-links" id="profile-links-5">
-            <!-- Links will be inserted here by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Profile 6 -->
-    <div class="profile-card" id="profile-card-6">
-        <div class="profile-avatar-container">
-            <div class="avatar-decoration" id="avatar-decoration-6"></div>
-            <div class="profile-avatar" id="profile-6"></div>
-        </div>
-        <div class="profile-name-container" id="profile-6-name-container">
-            <!-- Background and name image will be inserted here by JavaScript -->
-        </div>
-        <p class="profile-role" id="profile-role-6">Community Manager</p>
-        <p class="profile-bio" id="profile-bio-6">Building and nurturing online communities. Expert in social media strategies and user engagement techniques.</p>
-        <div class="profile-links" id="profile-links-6">
-            <!-- Links will be inserted here by JavaScript -->
-        </div>
-    </div>
-</div>
 
         <script>
             // ============ Enforce Bullshit ============
@@ -1418,16 +1335,226 @@ const FONT_CONFIG = {
     
             // ============ END CONFIGURATION SECTION ============
     
+            // New function to setup multiple profile cards from template
+            function setupMultipleProfiles() {
+                // First, check if we already have multiple profiles set up
+                if (document.querySelector('.profile-cards-container')) {
+                    return; // Already set up
+                }
+                
+                // Add CSS for the grid layout
+                const style = document.createElement('style');
+                style.textContent = `
+                    .profile-cards-container {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                        gap: 2rem;
+                        width: 100%;
+                        max-width: 1200px;
+                        margin: 0 auto;
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .profile-cards-container {
+                            grid-template-columns: 1fr;
+                            gap: 2.5rem;
+                        }
+                        
+                        .profile-card {
+                            max-width: 90%;
+                            margin: 0 auto;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // Find the existing single profile card
+                const existingCard = document.querySelector('.profile-card');
+                if (!existingCard) return;
+                
+                // Create a container for all profile cards
+                const profileCardsContainer = document.createElement('div');
+                profileCardsContainer.className = 'profile-cards-container';
+                
+                // Clone the existing card as a template
+                const cardTemplate = existingCard.cloneNode(true);
+                
+                // Remove the original card
+                const parent = existingCard.parentNode;
+                parent.removeChild(existingCard);
+                
+                // Add the container to the parent
+                parent.appendChild(profileCardsContainer);
+                
+                // Create 6 cards
+                for (let i = 1; i <= 6; i++) {
+                    // Clone the template for each card
+                    const newCard = cardTemplate.cloneNode(true);
+                    
+                    // Update IDs
+                    newCard.id = `profile-card-${i}`;
+                    
+                    // Update element IDs inside the card
+                    const elements = newCard.querySelectorAll('[id]');
+                    elements.forEach(element => {
+                        // Replace any existing IDs with indexed versions
+                        if (element.id.includes('profile')) {
+                            const baseName = element.id.split('-')[0];
+                            element.id = `${baseName}-${i}`;
+                        } else if (element.id.includes('avatar')) {
+                            element.id = `avatar-decoration-${i}`;
+                        } else {
+                            // For other elements like role, bio, etc.
+                            const parts = element.id.split('-');
+                            if (parts.length >= 2) {
+                                element.id = `${parts[0]}-${parts[1]}-${i}`;
+                            }
+                        }
+                    });
+                    
+                    // Add to container
+                    profileCardsContainer.appendChild(newCard);
+                }
+            }
+
+            // New function to update all profiles
+            function setupAllProfiles() {
+                // Make sure we have all 6 cards first
+                setupMultipleProfiles();
+                
+                // Now update each profile with its config data
+                for (let i = 0; i < PROFILES_CONFIG.length; i++) {
+                    const profileIndex = i + 1; // Profile IDs start at 1
+                    updateProfile(profileIndex);
+                }
+            }
+
+            // Function to update an individual profile
+            function updateProfile(index) {
+                const config = PROFILES_CONFIG[index - 1];
+                if (!config) return;
+                
+                // Get elements
+                const card = document.getElementById(`profile-card-${index}`);
+                if (!card) return;
+                
+                const avatar = card.querySelector(`.profile-avatar`);
+                const decoration = card.querySelector(`.avatar-decoration`);
+                const nameContainer = card.querySelector(`.profile-name-container`);
+                const role = card.querySelector(`.profile-role`);
+                const bio = card.querySelector(`.profile-bio`);
+                const links = card.querySelector(`.profile-links`);
+                
+                // Update avatar
+                if (avatar && config.avatar) {
+                    avatar.id = `profile-${index}`;
+                    avatar.style.backgroundImage = `url(${config.avatar})`;
+                }
+                
+                // Update avatar decoration
+                if (decoration && AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+                    decoration.id = `avatar-decoration-${index}`;
+                    decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+                }
+                
+                // Update name container
+                if (nameContainer) {
+                    nameContainer.id = `profile-${index}-name-container`;
+                    nameContainer.innerHTML = ''; // Clear existing content
+                    
+                    // Add name background if configured
+                    if (config.nameBg && config.nameBg.image) {
+                        const bgImg = document.createElement('img');
+                        bgImg.src = config.nameBg.image;
+                        bgImg.className = 'profile-name-bg';
+                        bgImg.style.opacity = config.nameBg.opacity || 0.7;
+                        nameContainer.appendChild(bgImg);
+                    }
+                    
+                    // Add name (image or text)
+                    if (config.nameImage) {
+                        const nameImg = document.createElement('img');
+                        nameImg.src = config.nameImage;
+                        nameImg.alt = config.nameText || '';
+                        nameImg.className = 'profile-name-img';
+                        
+                        // Add zoom effect
+                        nameImg.addEventListener('mouseenter', () => nameImg.classList.add('zoom'));
+                        nameImg.addEventListener('mouseleave', () => nameImg.classList.remove('zoom'));
+                        
+                        nameContainer.appendChild(nameImg);
+                    } else if (config.nameText) {
+                        const nameText = document.createElement('h2');
+                        nameText.className = 'profile-name';
+                        nameText.textContent = config.nameText;
+                        
+                        // Add zoom effect
+                        nameText.addEventListener('mouseenter', () => nameText.classList.add('zoom'));
+                        nameText.addEventListener('mouseleave', () => nameText.classList.remove('zoom'));
+                        
+                        nameContainer.appendChild(nameText);
+                    }
+                }
+                
+                // Update role
+                if (role) {
+                    role.id = `profile-role-${index}`;
+                    role.textContent = config.role || '';
+                }
+                
+                // Update bio
+                if (bio) {
+                    bio.id = `profile-bio-${index}`;
+                    bio.textContent = config.bio || '';
+                }
+                
+                // Update links
+                if (links) {
+                    links.id = `profile-links-${index}`;
+                    links.innerHTML = ''; // Clear existing links
+                    
+                    if (config.links && config.links.length > 0) {
+                        config.links.forEach(link => {
+                            const linkEl = document.createElement('a');
+                            linkEl.href = link.url || '#';
+                            linkEl.className = 'profile-link';
+                            
+                            // Create icon
+                            const iconSpan = document.createElement('span');
+                            iconSpan.className = 'link-icon';
+                            
+                            if (link.iconImage) {
+                                const iconImg = document.createElement('img');
+                                iconImg.src = link.iconImage;
+                                iconImg.alt = link.text || '';
+                                iconSpan.appendChild(iconImg);
+                            } else {
+                                iconSpan.textContent = link.icon || '🔗';
+                            }
+                            
+                            linkEl.appendChild(iconSpan);
+                            
+                            // Add text
+                            const textSpan = document.createElement('span');
+                            textSpan.textContent = link.text || 'Link';
+                            linkEl.appendChild(textSpan);
+                            
+                            links.appendChild(linkEl);
+                        });
+                    }
+                }
+            }
+
             // Set Profile Name Background
             function setProfileNameBackground() {
                 const profileNameContainer = document.getElementById('profile-1-name-container');
                 
-                if (profileNameContainer && PROFILE_CONFIG.nameBg && PROFILE_CONFIG.nameBg.image) {
+                if (profileNameContainer && PROFILES_CONFIG[0].nameBg && PROFILES_CONFIG[0].nameBg.image) {
                     // Create the background image element
                     const backgroundImg = document.createElement('img');
-                    backgroundImg.src = PROFILE_CONFIG.nameBg.image;
+                    backgroundImg.src = PROFILES_CONFIG[0].nameBg.image;
                     backgroundImg.className = 'profile-name-bg';
-                    backgroundImg.style.opacity = PROFILE_CONFIG.nameBg.opacity || 0.7;
+                    backgroundImg.style.opacity = PROFILES_CONFIG[0].nameBg.opacity || 0.7;
                     
                     // Insert at the beginning of the container
                     profileNameContainer.insertBefore(backgroundImg, profileNameContainer.firstChild);
@@ -1438,11 +1565,11 @@ const FONT_CONFIG = {
             function setProfileNameImage() {
                 const profileNameContainer = document.getElementById('profile-1-name-container');
                 
-                if (profileNameContainer && PROFILE_CONFIG.nameImage) {
+                if (profileNameContainer && PROFILES_CONFIG[0].nameImage) {
                     // Create image element
                     const nameImage = document.createElement('img');
-                    nameImage.src = PROFILE_CONFIG.nameImage;
-                    nameImage.alt = PROFILE_CONFIG.nameText;
+                    nameImage.src = PROFILES_CONFIG[0].nameImage;
+                    nameImage.alt = PROFILES_CONFIG[0].nameText;
                     nameImage.className = 'profile-name-img';
                     
                     // Add to container
@@ -1455,7 +1582,7 @@ const FONT_CONFIG = {
                     // Create text element as fallback
                     const nameText = document.createElement('h2');
                     nameText.className = 'profile-name';
-                    nameText.textContent = PROFILE_CONFIG.nameText;
+                    nameText.textContent = PROFILES_CONFIG[0].nameText;
                     
                     // Add to container
                     profileNameContainer.appendChild(nameText);
@@ -1470,20 +1597,15 @@ const FONT_CONFIG = {
             function setProfileLinks() {
                 const profileLinksContainer = document.getElementById('profile-links');
                 
-                if (profileLinksContainer && PROFILE_CONFIG.links) {
+                if (profileLinksContainer && PROFILES_CONFIG[0].links) {
                     // Clear existing links
                     profileLinksContainer.innerHTML = '';
                     
                     // Add each configured link
-                    PROFILE_CONFIG.links.forEach(link => {
+                    PROFILES_CONFIG[0].links.forEach(link => {
                         const linkElement = document.createElement('a');
                         linkElement.href = link.url || '#';
                         linkElement.className = 'profile-link';
-                        
-                        // Apply custom font to button if specified
-                        if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.buttons) {
-                            linkElement.style.fontFamily = PROFILE_CONFIG.fonts.buttons;
-                        }
                         
                         // Add icon based on configuration
                         const iconSpan = document.createElement('span');
@@ -1514,9 +1636,9 @@ const FONT_CONFIG = {
             // Set Profile Content
             function setProfileContent() {
                 // Set avatar image
-                const avatarElement = document.getElementById('profile-1');
-                if (avatarElement && PROFILE_CONFIG.avatar) {
-                    avatarElement.style.backgroundImage = `url(${PROFILE_CONFIG.avatar})`;
+                const avatarElement = document.getElementById('profile');
+                if (avatarElement && PROFILES_CONFIG[0].avatar) {
+                    avatarElement.style.backgroundImage = `url(${PROFILES_CONFIG[0].avatar})`;
                 }
                 
                 // Set avatar decoration
@@ -1530,19 +1652,13 @@ const FONT_CONFIG = {
                 // Set role text
                 const roleElement = document.getElementById('profile-role');
                 if (roleElement) {
-                    roleElement.textContent = PROFILE_CONFIG.role;
-                    if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.role) {
-                        roleElement.style.fontFamily = PROFILE_CONFIG.fonts.role;
-                    }
+                    roleElement.textContent = PROFILES_CONFIG[0].role;
                 }
                 
                 // Set bio text
                 const bioElement = document.getElementById('profile-bio');
                 if (bioElement) {
-                    bioElement.textContent = PROFILE_CONFIG.bio;
-                    if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.bio) {
-                        bioElement.style.fontFamily = PROFILE_CONFIG.fonts.bio;
-                    }
+                    bioElement.textContent = PROFILES_CONFIG[0].bio;
                 }
             }
 // New function for the subtitle images
@@ -1584,17 +1700,14 @@ function setSubtitleImages() {
   // Add image to wrapper
   wrapper.appendChild(img);
  
-
   // Add wrapper to container
   subtitleContainer.appendChild(wrapper);
   });
  
-
   // Append container to header after existing elements
   headerElement.appendChild(subtitleContainer);
- }
+}
  
-
 // Handle click-to-enter overlay
 function setupEnterOverlay() {
     const overlay = document.getElementById('enter-overlay');
@@ -1633,83 +1746,67 @@ function randomizeAndPlayMusic() {
     playAudio();
 }
 
-// Improve video syncing
 // Improved function to maintain video-audio sync when tab is inactive
- function improveVideoSync() {
+function improveVideoSync() {
   const video = document.getElementById('bg-video');
   const audioPlayer = document.getElementById('audio-player');
  
-
   if (!video || !audioPlayer) return;
  
-
   // Set the video to have high priority
   video.setAttribute('importance', 'high');
  
-
   // Add the playsinline attribute to help mobile browsers
   video.setAttribute('playsinline', '');
  
-
   // Make sure the video won't be throttled
   video.setAttribute('disablePictureInPicture', '');
  
-
   // Keep track of last play time to detect throttling
   let lastPlayTime = 0;
   let syncCheckInterval;
  
-
   // Function to force sync between video and audio
   const syncVideoWithAudio = () => {
   if (!isPlaying) return;
  
-
   // If video and audio are out of sync by more than 0.3 seconds
   if (Math.abs(video.currentTime - audioPlayer.currentTime) > 0.3) {
   // Sync video time to audio time
   video.currentTime = audioPlayer.currentTime;
   }
  
-
   // Check if video is paused but audio is playing
   if (video.paused && !audioPlayer.paused) {
   video.play().catch(() => {});
   }
  
-
   // Check if video is being throttled (time hasn't advanced)
   if (video.currentTime === lastPlayTime && !video.paused) {
   video.currentTime = audioPlayer.currentTime;
   }
  
-
   lastPlayTime = video.currentTime;
   };
  
-
   // Start sync checking when audio plays
   audioPlayer.addEventListener('play', () => {
   // Clear any existing interval
   if (syncCheckInterval) clearInterval(syncCheckInterval);
  
-
   // Create new interval to check sync frequently
   syncCheckInterval = setInterval(syncVideoWithAudio, 1000);
  
-
   // Initial sync
   video.currentTime = audioPlayer.currentTime;
   video.play().catch(() => {});
   });
  
-
   // Update sync when seeking
   audioPlayer.addEventListener('seeked', () => {
   video.currentTime = audioPlayer.currentTime;
   });
  
-
   // Handle visibility change
   document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
@@ -1717,165 +1814,165 @@ function randomizeAndPlayMusic() {
   }
   });
  
-
   // Cleanup interval when audio pauses
   audioPlayer.addEventListener('pause', () => {
   if (syncCheckInterval) clearInterval(syncCheckInterval);
   video.pause();
   });
- }
- 
-            // Click Sound Setup
-            let soundEnabled = CLICK_SOUND_CONFIG.enabled;
-            let lastSoundTime = 0;
-            const clickSound = document.getElementById('click-sound');
-            const soundToggle = document.getElementById('sound-toggle');
+}
+
+// Click Sound Setup
+let soundEnabled = CLICK_SOUND_CONFIG.enabled;
+let lastSoundTime = 0;
+const clickSound = document.getElementById('click-sound');
+const soundToggle = document.getElementById('sound-toggle');
+
+function setupClickSound() {
+    // Set the sound source and volume
+    clickSound.src = CLICK_SOUND_CONFIG.soundURL;
+    clickSound.volume = CLICK_SOUND_CONFIG.volume;
     
-            function setupClickSound() {
-                // Set the sound source and volume
-                clickSound.src = CLICK_SOUND_CONFIG.soundURL;
-                clickSound.volume = CLICK_SOUND_CONFIG.volume;
-                
-                // Update the toggle button
-                updateSoundToggleButton();
-                
-                // Add click event listener to the entire document
-                document.addEventListener('click', playClickSound);
-                
-                // Add toggle button functionality
-                soundToggle.addEventListener('click', function(e) {
-                    // Prevent this click from triggering the document click handler
-                    e.stopPropagation();
-                    
-                    // Toggle sound state
-                    soundEnabled = !soundEnabled;
-                    updateSoundToggleButton();
-                });
-            }
-            
-            function updateSoundToggleButton() {
-                soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
-                soundToggle.title = soundEnabled ? 'Disable click sounds' : 'Enable click sounds';
-            }
-            
-            function playClickSound(e) {
-                // Don't play sound if disabled
-                if (!soundEnabled) return;
-                
-                // Throttle sound to prevent spam
-                const now = Date.now();
-                if (now - lastSoundTime < CLICK_SOUND_CONFIG.throttleMS) return;
-                lastSoundTime = now;
-                
-                // Play the sound
-                clickSound.currentTime = 0; // Reset to start
-                clickSound.play().catch(error => {
-                    console.log('Sound playback error:', error);
-                });
-            }
+    // Update the toggle button
+    updateSoundToggleButton();
     
-            // Set Favicon
-            function setFavicon() {
-                if (FAVICON_CONFIG.image && FAVICON_CONFIG.image.trim() !== "") {
-                    const favicon = document.createElement('link');
-                    favicon.rel = 'shortcut icon';
-                    favicon.href = FAVICON_CONFIG.image;
-                    document.head.appendChild(favicon);
-                }
-            }
-            
-            // Set Site Title Image
-            function setSiteTitleImage() {
-                const siteTitleElement = document.getElementById('site-title');
-                
-                if (SITE_TITLE_CONFIG.image && SITE_TITLE_CONFIG.image.trim() !== "") {
-                    // Create image element
-                    const titleImage = document.createElement('img');
-                    titleImage.src = SITE_TITLE_CONFIG.image;
-                    titleImage.alt = SITE_TITLE_CONFIG.altText;
-                    titleImage.className = 'site-title-img';
-                    
-                    // Replace the h1 with the image
-                    siteTitleElement.parentNode.replaceChild(titleImage, siteTitleElement);
-                    
-                    // Also update the page title
-                    document.title = SITE_TITLE_CONFIG.altText;
-                }
-            }
+    // Add click event listener to the entire document
+    document.addEventListener('click', playClickSound);
     
-            // Custom Cursor Setup
-            const cursor = document.querySelector('.cursor');
-            const trails = [];
+    // Add toggle button functionality
+    soundToggle.addEventListener('click', function(e) {
+        // Prevent this click from triggering the document click handler
+        e.stopPropagation();
+        
+        // Toggle sound state
+        soundEnabled = !soundEnabled;
+        updateSoundToggleButton();
+    });
+}
+
+function updateSoundToggleButton() {
+    soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+    soundToggle.title = soundEnabled ? 'Disable click sounds' : 'Enable click sounds';
+}
+
+function playClickSound(e) {
+    // Don't play sound if disabled
+    if (!soundEnabled) return;
     
-            // Create cursor trails with configurable count
-            function setupCursorTrails() {
-                for (let i = 0; i < TRAIL_CONFIG.count; i++) {
-                    const trail = document.createElement('div');
-                    trail.className = 'cursor-trail';
-                    document.body.appendChild(trail);
-                    trails.push(trail);
-                }
-            }
+    // Throttle sound to prevent spam
+    const now = Date.now();
+    if (now - lastSoundTime < CLICK_SOUND_CONFIG.throttleMS) return;
+    lastSoundTime = now;
     
-            // Set cursor style
-            function setCursor() {
-                if (CURSOR_CONFIG.image && CURSOR_CONFIG.image.trim() !== "") {
-                    cursor.style.backgroundImage = `url(${CURSOR_CONFIG.image})`;
-                    cursor.style.backgroundColor = 'transparent';
-                } else {
-                    cursor.style.backgroundImage = 'none';
-                    cursor.style.backgroundColor = CURSOR_CONFIG.color;
-                }
-                cursor.style.width = CURSOR_CONFIG.size + 'px';
-                cursor.style.height = CURSOR_CONFIG.size + 'px';
-            }
+    // Play the sound
+    clickSound.currentTime = 0; // Reset to start
+    clickSound.play().catch(error => {
+        console.log('Sound playback error:', error);
+    });
+}
+
+// Set Favicon
+function setFavicon() {
+    if (FAVICON_CONFIG.image && FAVICON_CONFIG.image.trim() !== "") {
+        const favicon = document.createElement('link');
+        favicon.rel = 'shortcut icon';
+        favicon.href = FAVICON_CONFIG.image;
+        document.head.appendChild(favicon);
+    }
+}
+
+// Set Site Title Image
+function setSiteTitleImage() {
+    const siteTitleElement = document.getElementById('site-title');
     
-            // Set trail style
-            function setTrails() {
-                trails.forEach(trail => {
-                    if (TRAIL_CONFIG.image && TRAIL_CONFIG.image.trim() !== "") {
-                        trail.style.backgroundImage = `url(${TRAIL_CONFIG.image})`;
-                        trail.style.backgroundColor = 'transparent';
-                        trail.style.clipPath = 'none';
-                    } else {
-                        trail.style.backgroundImage = 'none';
-                        trail.style.backgroundColor = TRAIL_CONFIG.color;
-                        trail.style.clipPath = 'polygon(50% 85%, 20% 40%, 50% 15%, 80% 40%)';
-                    }
-                    trail.style.width = TRAIL_CONFIG.size + 'px';
-                    trail.style.height = TRAIL_CONFIG.size + 'px';
-                });
-            }
-    
-            // Cursor movement
-            function setupCursorMovement() {
-                document.addEventListener('mousemove', (e) => {
-                    cursor.style.left = e.clientX - (CURSOR_CONFIG.size / 2) + 'px';
-                    cursor.style.top = e.clientY - (CURSOR_CONFIG.size / 2) + 'px';
-    
-                    // Animate trails
-                    trails.forEach((trail, index) => {
-                        setTimeout(() => {
-                            trail.style.left = e.clientX - (TRAIL_CONFIG.size / 2) + 'px';
-                            trail.style.top = e.clientY - (TRAIL_CONFIG.size / 2) + 'px';
-                            trail.style.opacity = (TRAIL_CONFIG.count - index) / (TRAIL_CONFIG.count + 5);
-                        }, index * 50);
-                    });
-                });
-            }
-    
-            // Import custom fonts
-            function importCustomFonts() {
-                CUSTOM_FONTS.forEach(font => {
-                    if (!document.getElementById(`font-${font.name}`)) {
-                        const fontLink = document.createElement('link');
-                        fontLink.id = `font-${font.name}`;
-                        fontLink.rel = 'stylesheet';
-                        fontLink.href = font.url;
-                        document.head.appendChild(fontLink);
-                    }
-                });
-            }
+    if (SITE_TITLE_CONFIG.image && SITE_TITLE_CONFIG.image.trim() !== "") {
+        // Create image element
+        const titleImage = document.createElement('img');
+        titleImage.src = SITE_TITLE_CONFIG.image;
+        titleImage.alt = SITE_TITLE_CONFIG.altText;
+        titleImage.className = 'site-title-img';
+        
+        // Replace the h1 with the image
+        siteTitleElement.parentNode.replaceChild(titleImage, siteTitleElement);
+        
+        // Also update the page title
+        document.title = SITE_TITLE_CONFIG.altText;
+    }
+}
+
+// Custom Cursor Setup
+const cursor = document.querySelector('.cursor');
+const trails = [];
+
+// Create cursor trails with configurable count
+function setupCursorTrails() {
+    for (let i = 0; i < TRAIL_CONFIG.count; i++) {
+        const trail = document.createElement('div');
+        trail.className = 'cursor-trail';
+        document.body.appendChild(trail);
+        trails.push(trail);
+    }
+}
+
+// Set cursor style
+function setCursor() {
+    if (CURSOR_CONFIG.image && CURSOR_CONFIG.image.trim() !== "") {
+        cursor.style.backgroundImage = `url(${CURSOR_CONFIG.image})`;
+        cursor.style.backgroundColor = 'transparent';
+    } else {
+        cursor.style.backgroundImage = 'none';
+        cursor.style.backgroundColor = CURSOR_CONFIG.color;
+    }
+    cursor.style.width = CURSOR_CONFIG.size + 'px';
+    cursor.style.height = CURSOR_CONFIG.size + 'px';
+}
+
+// Set trail style
+function setTrails() {
+    trails.forEach(trail => {
+        if (TRAIL_CONFIG.image && TRAIL_CONFIG.image.trim() !== "") {
+            trail.style.backgroundImage = `url(${TRAIL_CONFIG.image})`;
+            trail.style.backgroundColor = 'transparent';
+            trail.style.clipPath = 'none';
+        } else {
+            trail.style.backgroundImage = 'none';
+            trail.style.backgroundColor = TRAIL_CONFIG.color;
+            trail.style.clipPath = 'polygon(50% 85%, 20% 40%, 50% 15%, 80% 40%)';
+        }
+        trail.style.width = TRAIL_CONFIG.size + 'px';
+        trail.style.height = TRAIL_CONFIG.size + 'px';
+    });
+}
+
+// Cursor movement
+function setupCursorMovement() {
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX - (CURSOR_CONFIG.size / 2) + 'px';
+        cursor.style.top = e.clientY - (CURSOR_CONFIG.size / 2) + 'px';
+
+        // Animate trails
+        trails.forEach((trail, index) => {
+            setTimeout(() => {
+                trail.style.left = e.clientX - (TRAIL_CONFIG.size / 2) + 'px';
+                trail.style.top = e.clientY - (TRAIL_CONFIG.size / 2) + 'px';
+                trail.style.opacity = (TRAIL_CONFIG.count - index) / (TRAIL_CONFIG.count + 5);
+            }, index * 50);
+        });
+    });
+}
+
+// Import custom fonts
+function importCustomFonts() {
+    CUSTOM_FONTS.forEach(font => {
+        if (!document.getElementById(`font-${font.name}`)) {
+            const fontLink = document.createElement('link');
+            fontLink.id = `font-${font.name}`;
+            fontLink.rel = 'stylesheet';
+            fontLink.href = font.url;
+            document.head.appendChild(fontLink);
+        }
+    });
+}
+
 function applyVolumeSliderStyles() {
     const style = document.createElement('style');
     
@@ -1934,108 +2031,109 @@ function applyVolumeSliderStyles() {
     style.textContent = styleText;
     document.head.appendChild(style);
 }
+
+// Music Player
+let currentTrack = 0;
+let isPlaying = false;
+let volume = 50;
+
+const trackTitle = document.getElementById('track-title');
+const trackArtist = document.getElementById('track-artist');
+const playBtn = document.getElementById('play-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const volumeSlider = document.getElementById('volume-slider');
+const volumeFill = document.getElementById('volume-fill');
+const volumePercent = document.getElementById('volume-percent');
+const audioPlayer = document.getElementById('audio-player');
+const albumArt = document.querySelector('.album-art');
+
+function updateTrackInfo() {
+    const track = MUSIC_TRACKS[currentTrack];
+    trackTitle.textContent = track.title;
+    trackArtist.textContent = track.artist;
     
-            // Music Player
-            let currentTrack = 0;
-            let isPlaying = false;
-            let volume = 50;
+    if (track.thumbnail) {
+        albumArt.style.backgroundImage = `url(${track.thumbnail})`;
+        albumArt.textContent = '';
+    } else {
+        albumArt.style.backgroundImage = 'none';
+        albumArt.textContent = '♪';
+    }
     
-            const trackTitle = document.getElementById('track-title');
-            const trackArtist = document.getElementById('track-artist');
-            const playBtn = document.getElementById('play-btn');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const volumeSlider = document.getElementById('volume-slider');
-            const volumeFill = document.getElementById('volume-fill');
-            const volumePercent = document.getElementById('volume-percent');
-            const audioPlayer = document.getElementById('audio-player');
-            const albumArt = document.querySelector('.album-art');
-    
-            function updateTrackInfo() {
-                const track = MUSIC_TRACKS[currentTrack];
-                trackTitle.textContent = track.title;
-                trackArtist.textContent = track.artist;
-                
-                if (track.thumbnail) {
-                    albumArt.style.backgroundImage = `url(${track.thumbnail})`;
-                    albumArt.textContent = '';
-                } else {
-                    albumArt.style.backgroundImage = 'none';
-                    albumArt.textContent = '♪';
-                }
-                
-                if (track.file) {
-                    audioPlayer.src = track.file;
-                }
-                updateVideoBackgroundForSong(track);
-            }
-    
-            function updateVolumeDisplay() {
-                volumeFill.style.width = volume + '%';
-                volumePercent.textContent = Math.round(volume) + '%';
-            }
-    
-            function playAudio() {
-                const video = document.getElementById('bg-video');
-                if (MUSIC_TRACKS[currentTrack].file) {
-                    audioPlayer.play().catch(e => console.log('Playback failed:', e));
-                    // Sync video playback with audio
-                    if (video.src) {
-                        video.play().catch(e => console.log('Video play failed:', e));
-                    }
-                }
-            }
-    
-            function pauseAudio() {
-                const video = document.getElementById('bg-video');
-                audioPlayer.pause();
-                // Sync video pause with audio
-                if (video.src) {
-                    video.pause();
-                }
-            }
-    
-            function updateVideoBackgroundForSong(songObj) {
-                const video = document.getElementById('bg-video');
-                let url = songObj && songObj.videoBg ? songObj.videoBg : "";
-                
-                if (url) {
-                    if (video.src !== url) video.src = url;
-                    video.style.display = "";
-                    // Only auto-play video if music is currently playing
-                    if (isPlaying) {
-                        video.play().catch(()=>{});
-                    }
-                    document.body.classList.add('has-bgvideo');
-                } else {
-                    video.pause();
-                    video.style.display = "none";
-                    video.src = "";
-                    document.body.classList.remove('has-bgvideo');
-                }
-            }
-    
-          function initializePaused() {
-        if (AUTO_PAUSE_CONFIG.enabled) {
-            const video = document.getElementById('bg-video');
-            
-            // Set default volume
-            volume = AUTO_PAUSE_CONFIG.defaultVolume;
-            volumeSlider.value = volume;
-            audioPlayer.volume = volume / 100;
-            updateVolumeDisplay();
-            
-            // Ensure everything is paused
-            isPlaying = false;
-            updatePlayButtonState();
-            
-            // Pause audio and video
-            audioPlayer.pause();
-            if (video.src) {
-                video.pause();
-            }
+    if (track.file) {
+        audioPlayer.src = track.file;
+    }
+    updateVideoBackgroundForSong(track);
+}
+
+function updateVolumeDisplay() {
+    volumeFill.style.width = volume + '%';
+    volumePercent.textContent = Math.round(volume) + '%';
+}
+
+function playAudio() {
+    const video = document.getElementById('bg-video');
+    if (MUSIC_TRACKS[currentTrack].file) {
+        audioPlayer.play().catch(e => console.log('Playback failed:', e));
+        // Sync video playback with audio
+        if (video.src) {
+            video.play().catch(e => console.log('Video play failed:', e));
         }
     }
+}
+
+function pauseAudio() {
+    const video = document.getElementById('bg-video');
+    audioPlayer.pause();
+    // Sync video pause with audio
+    if (video.src) {
+        video.pause();
+    }
+}
+
+function updateVideoBackgroundForSong(songObj) {
+    const video = document.getElementById('bg-video');
+    let url = songObj && songObj.videoBg ? songObj.videoBg : "";
+    
+    if (url) {
+        if (video.src !== url) video.src = url;
+        video.style.display = "";
+        // Only auto-play video if music is currently playing
+        if (isPlaying) {
+            video.play().catch(()=>{});
+        }
+        document.body.classList.add('has-bgvideo');
+    } else {
+        video.pause();
+        video.style.display = "none";
+        video.src = "";
+        document.body.classList.remove('has-bgvideo');
+    }
+}
+
+function initializePaused() {
+    if (AUTO_PAUSE_CONFIG.enabled) {
+        const video = document.getElementById('bg-video');
+        
+        // Set default volume
+        volume = AUTO_PAUSE_CONFIG.defaultVolume;
+        volumeSlider.value = volume;
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+        
+        // Ensure everything is paused
+        isPlaying = false;
+        updatePlayButtonState();
+        
+        // Pause audio and video
+        audioPlayer.pause();
+        if (video.src) {
+            video.pause();
+        }
+    }
+}
+
 // Load custom fonts from files
 function loadCustomFonts() {
     // Create style element for font faces
@@ -2064,198 +2162,8 @@ function loadCustomFonts() {
     fontStyle.textContent = fontFacesCSS;
     document.head.appendChild(fontStyle);
 }
-// New function to set up all profiles
-function setupAllProfiles() {
-    for (let i = 0; i < PROFILES_CONFIG.length; i++) {
-        const profileIndex = i + 1; // Profile IDs start at 1
-        setProfileNameBackground(profileIndex);
-        setProfileNameImage(profileIndex);
-        setProfileContent(profileIndex);
-        setProfileLinks(profileIndex);
-    }
-}
 
-// Update the existing functions to accept a profile index parameter
-function setProfileNameBackground(profileIndex) {
-    const profileNameContainer = document.getElementById(`profile-${profileIndex}-name-container`);
-    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
-    
-    if (profileNameContainer && profileConfig.nameBg && profileConfig.nameBg.image) {
-        // Create the background image element
-        const backgroundImg = document.createElement('img');
-        backgroundImg.src = profileConfig.nameBg.image;
-        backgroundImg.className = 'profile-name-bg';
-        backgroundImg.style.opacity = profileConfig.nameBg.opacity || 0.7;
-        
-        // Insert at the beginning of the container
-        profileNameContainer.insertBefore(backgroundImg, profileNameContainer.firstChild);
-    }
-}
-
-function setProfileNameImage(profileIndex) {
-    const profileNameContainer = document.getElementById(`profile-${profileIndex}-name-container`);
-    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
-    
-    if (profileNameContainer && profileConfig.nameImage) {
-        // Create image element
-        const nameImage = document.createElement('img');
-        nameImage.src = profileConfig.nameImage;
-        nameImage.alt = profileConfig.nameText;
-        nameImage.className = 'profile-name-img';
-        
-        // Add to container
-        profileNameContainer.appendChild(nameImage);
-        
-        // Add zoom event listeners
-        nameImage.addEventListener('mouseenter', () => nameImage.classList.add('zoom'));
-        nameImage.addEventListener('mouseleave', () => nameImage.classList.remove('zoom'));
-    } else if (profileNameContainer) {
-        // Create text element as fallback
-        const nameText = document.createElement('h2');
-        nameText.className = 'profile-name';
-        nameText.textContent = profileConfig.nameText;
-        
-        // Add to container
-        profileNameContainer.appendChild(nameText);
-        
-        // Add zoom event listeners
-        nameText.addEventListener('mouseenter', () => nameText.classList.add('zoom'));
-        nameText.addEventListener('mouseleave', () => nameText.classList.remove('zoom'));
-    }
-}
-
-function setProfileLinks(profileIndex) {
-    const profileLinksContainer = document.getElementById(`profile-links-${profileIndex}`);
-    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
-    
-    if (profileLinksContainer && profileConfig.links) {
-        // Clear existing links
-        profileLinksContainer.innerHTML = '';
-        
-        // Add each configured link
-        profileConfig.links.forEach(link => {
-            const linkElement = document.createElement('a');
-            linkElement.href = link.url || '#';
-            linkElement.className = 'profile-link';
-            
-            // Apply custom font to button if specified
-            if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.buttons) {
-                linkElement.style.fontFamily = PROFILE_CONFIG.fonts.buttons;
-            }
-            
-            // Add icon based on configuration
-            const iconSpan = document.createElement('span');
-            iconSpan.className = 'link-icon';
-            
-            // Use icon image if provided, otherwise use text icon
-            if (link.iconImage) {
-                const iconImg = document.createElement('img');
-                iconImg.src = link.iconImage;
-                iconImg.alt = link.text;
-                iconSpan.appendChild(iconImg);
-            } else {
-                iconSpan.textContent = link.icon || '🔗';
-            }
-            
-            linkElement.appendChild(iconSpan);
-            
-            // Add text
-            const textSpan = document.createElement('span');
-            textSpan.textContent = link.text || 'Link';
-            linkElement.appendChild(textSpan);
-            
-            profileLinksContainer.appendChild(linkElement);
-        });
-    }
-}
-
-function setProfileContent(profileIndex) {
-    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
-    
-    // Set avatar image
-    const avatarElement = document.getElementById(`profile-${profileIndex}`);
-    if (avatarElement && profileConfig.avatar) {
-        avatarElement.style.backgroundImage = `url(${profileConfig.avatar})`;
-    }
-    
-    // Set avatar decoration
-    const decorationElement = document.getElementById(`avatar-decoration-${profileIndex}`);
-    if (decorationElement && AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
-        decorationElement.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
-    } else if (decorationElement) {
-        decorationElement.style.display = 'none';
-    }
-    
-    // Set role text
-    const roleElement = document.getElementById(`profile-role-${profileIndex}`);
-    if (roleElement) {
-        roleElement.textContent = profileConfig.role;
-        if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.role) {
-            roleElement.style.fontFamily = PROFILE_CONFIG.fonts.role;
-        }
-    }
-    
-    // Set bio text
-    const bioElement = document.getElementById(`profile-bio-${profileIndex}`);
-    if (bioElement) {
-        bioElement.textContent = profileConfig.bio;
-        if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.bio) {
-            bioElement.style.fontFamily = PROFILE_CONFIG.fonts.bio;
-        }
-    }
-}
-
-// Update the setupHoverEffects function to handle all profile cards
-function setupHoverEffects() {
-    const cards = document.querySelectorAll('.profile-card');
-    if (cards.length > 0) {
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'scale(1.5)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'scale(1)';
-            });
-        });
-    }
-
-    document.querySelectorAll('button, a').forEach(element => {
-        element.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(1.5)';
-            cursor.style.opacity = '0.8';
-        });
-        
-        element.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.opacity = '1';
-        });
-    });
-}
-
-// Update the DOM Content Loaded section to include our new structure
-// In the window.addEventListener('DOMContentLoaded', ...) function,
-// right before the existing profile card setup, add this code:
-function insertProfileCardsStructure() {
-    // First, add the CSS for profile cards layout
-    const style = document.createElement('style');
-    style.textContent = profileCardsCSS;
-    document.head.appendChild(style);
-    
-    // Then, replace the single profile card with multiple cards
-    const container = document.querySelector('.container');
-    const existingProfileCard = document.getElementById('profile-card-1');
-    
-    if (container && existingProfileCard) {
-        // Create a temporary container
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = profileCardsHTML;
-        
-        // Replace the existing card with our new structure
-        container.replaceChild(tempDiv.firstElementChild, existingProfileCard);
-    }
-}
-// Add this to your existing page
+// Add this to your page
 function adjustSpacing() {
     // Create a style element
     const style = document.createElement('style');
@@ -2282,9 +2190,10 @@ function adjustSpacing() {
     // Append to document head
     document.head.appendChild(style);
 }
+
 // Apply custom fonts to elements
 function applyCustomFonts() {
-    // Site title
+    // Apply fonts to site elements
     if (FONT_CONFIG.siteTitle) {
         const siteTitle = document.getElementById('site-title');
         if (siteTitle) {
@@ -2292,39 +2201,26 @@ function applyCustomFonts() {
         }
     }
     
-    // Site description
-    if (FONT_CONFIG.siteDescription) {
-        const siteDesc = document.querySelector('.header p');
-        if (siteDesc) {
-            siteDesc.style.fontFamily = FONT_CONFIG.siteDescription.family + ', ' + FONT_CONFIG.siteDescription.fallback;
+    // Apply fonts to profile elements
+    document.querySelectorAll('.profile-role').forEach(el => {
+        if (FONT_CONFIG.profileRole) {
+            el.style.fontFamily = FONT_CONFIG.profileRole.family + ', ' + FONT_CONFIG.profileRole.fallback;
         }
-    }
+    });
     
-    // Profile role
-    if (FONT_CONFIG.profileRole) {
-        const profileRole = document.getElementById('profile-role');
-        if (profileRole) {
-            profileRole.style.fontFamily = FONT_CONFIG.profileRole.family + ', ' + FONT_CONFIG.profileRole.fallback;
+    document.querySelectorAll('.profile-bio').forEach(el => {
+        if (FONT_CONFIG.profileBio) {
+            el.style.fontFamily = FONT_CONFIG.profileBio.family + ', ' + FONT_CONFIG.profileBio.fallback;
         }
-    }
+    });
     
-    // Profile bio
-    if (FONT_CONFIG.profileBio) {
-        const profileBio = document.getElementById('profile-bio');
-        if (profileBio) {
-            profileBio.style.fontFamily = FONT_CONFIG.profileBio.family + ', ' + FONT_CONFIG.profileBio.fallback;
+    document.querySelectorAll('.profile-link').forEach(el => {
+        if (FONT_CONFIG.profileButtons) {
+            el.style.fontFamily = FONT_CONFIG.profileButtons.family + ', ' + FONT_CONFIG.profileButtons.fallback;
         }
-    }
+    });
     
-    // Profile buttons
-    if (FONT_CONFIG.profileButtons) {
-        const profileLinks = document.querySelectorAll('.profile-link');
-        profileLinks.forEach(link => {
-            link.style.fontFamily = FONT_CONFIG.profileButtons.family + ', ' + FONT_CONFIG.profileButtons.fallback;
-        });
-    }
-    
-    // Music player title
+    // Apply fonts to music player elements
     if (FONT_CONFIG.musicTitle) {
         const trackTitle = document.getElementById('track-title');
         if (trackTitle) {
@@ -2332,263 +2228,253 @@ function applyCustomFonts() {
         }
     }
     
-    // Music player artist
     if (FONT_CONFIG.musicArtist) {
         const trackArtist = document.getElementById('track-artist');
         if (trackArtist) {
             trackArtist.style.fontFamily = FONT_CONFIG.musicArtist.family + ', ' + FONT_CONFIG.musicArtist.fallback;
         }
     }
+}
+
+// Update the setupMusicPlayer function with this code
+function setupMusicPlayer() {
+    // Set up button images first
+    setupPlayerButtonImages();
     
-    // Volume text
-    if (FONT_CONFIG.volumeText) {
-        const volumePercent = document.getElementById('volume-percent');
-        if (volumePercent) {
-            volumePercent.style.fontFamily = FONT_CONFIG.volumeText.family + ', ' + FONT_CONFIG.volumeText.fallback;
+    // Music player controls
+    playBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        updatePlayButtonState();
+        
+        if (isPlaying) {
+            playAudio();
+        } else {
+            pauseAudio();
         }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+        updateTrackInfo();
+        if (isPlaying) {
+            playAudio();
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+        updateTrackInfo();
+        if (isPlaying) {
+            playAudio();
+        }
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+        volume = e.target.value;
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+        currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
+        updateTrackInfo();
+        if (isPlaying) {
+            playAudio();
+        }
+    });
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+    });
+}
+
+// Add these new functions to handle custom button images
+function setupPlayerButtonImages() {
+    // Setup play button
+    setupButtonImage(playBtn, MUSIC_PLAYER_BUTTONS.play, true);
+    
+    // Setup previous button
+    setupButtonImage(prevBtn, MUSIC_PLAYER_BUTTONS.prev);
+    
+    // Setup next button
+    setupButtonImage(nextBtn, MUSIC_PLAYER_BUTTONS.next);
+}
+
+function setupButtonImage(button, config, isPlayButton = false) {
+    // Skip if no configuration or no image URL
+    if (!config || !config.image || config.image.trim() === '') {
+        return;
+    }
+    
+    // Clear button content
+    button.innerHTML = '';
+    
+    // Set button size
+    button.style.setProperty('--btn-size', config.size + 'px');
+    button.classList.add('with-image');
+    
+    // Create image element
+    const img = document.createElement('img');
+    img.src = config.image;
+    img.alt = config.text || '';
+    
+    // If this is play button, store pause image URL for later
+    if (isPlayButton && config.pauseImage) {
+        button.dataset.playImage = config.image;
+        button.dataset.pauseImage = config.pauseImage;
+        button.dataset.playText = config.text || '▶';
+        button.dataset.pauseText = config.pauseText || '⏸';
+    }
+    
+    // Add image to button
+    button.appendChild(img);
+    
+    // Remove background from play button if it has an image
+    if (button.classList.contains('play-btn')) {
+        button.style.background = 'transparent';
     }
 }
-    
-            // Setup player controls
-          // Update the setupMusicPlayer function with this code
-    function setupMusicPlayer() {
-        // Set up button images first
-        setupPlayerButtonImages();
-        
-        // Music player controls
-        playBtn.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            updatePlayButtonState();
-            
-            if (isPlaying) {
-                playAudio();
-            } else {
-                pauseAudio();
-            }
-        });
-    
-  prevBtn.addEventListener('click', () => {
-  currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
-  updateTrackInfo();
-  if (isPlaying) {
-  playAudio();
-  }
-  });
-    
- nextBtn.addEventListener('click', () => {
-  currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
-  updateTrackInfo();
-  if (isPlaying) {
-  playAudio();
-  }
-  });
-    
-        volumeSlider.addEventListener('input', (e) => {
-            volume = e.target.value;
-            audioPlayer.volume = volume / 100;
-            updateVolumeDisplay();
-        });
- 
 
-  audioPlayer.addEventListener('ended', () => {
-  currentTrack = Math.floor(Math.random() * MUSIC_TRACKS.length);
-  updateTrackInfo();
-  if (isPlaying) {
-  playAudio();
-  }
-  });
- 
-
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            audioPlayer.volume = volume / 100;
-            updateVolumeDisplay();
-        });
-    }
-    
-    // Add these new functions to handle custom button images
-    function setupPlayerButtonImages() {
-        // Setup play button
-        setupButtonImage(playBtn, MUSIC_PLAYER_BUTTONS.play, true);
-        
-        // Setup previous button
-        setupButtonImage(prevBtn, MUSIC_PLAYER_BUTTONS.prev);
-        
-        // Setup next button
-        setupButtonImage(nextBtn, MUSIC_PLAYER_BUTTONS.next);
-    }
-    
-    function setupButtonImage(button, config, isPlayButton = false) {
-        // Skip if no configuration or no image URL
-        if (!config || !config.image || config.image.trim() === '') {
-            return;
-        }
-        
-        // Clear button content
-        button.innerHTML = '';
-        
-        // Set button size
-        button.style.setProperty('--btn-size', config.size + 'px');
-        button.classList.add('with-image');
-        
-        // Create image element
-        const img = document.createElement('img');
-        img.src = config.image;
-        img.alt = config.text || '';
-        
-        // If this is play button, store pause image URL for later
-        if (isPlayButton && config.pauseImage) {
-            button.dataset.playImage = config.image;
-            button.dataset.pauseImage = config.pauseImage;
-            button.dataset.playText = config.text || '▶';
-            button.dataset.pauseText = config.pauseText || '⏸';
-        }
-        
-        // Add image to button
-        button.appendChild(img);
-        
-        // Remove background from play button if it has an image
-        if (button.classList.contains('play-btn')) {
-            button.style.background = 'transparent';
-        }
-    }
-    
-    function updatePlayButtonState() {
-        // Update play button appearance based on playing state
-        if (playBtn.classList.contains('with-image')) {
-            // We're using images
-            const img = playBtn.querySelector('img');
-            if (isPlaying && playBtn.dataset.pauseImage) {
-                img.src = playBtn.dataset.pauseImage;
-                img.alt = playBtn.dataset.pauseText;
-            } else {
-                img.src = playBtn.dataset.playImage;
-                img.alt = playBtn.dataset.playText;
-            }
+function updatePlayButtonState() {
+    // Update play button appearance based on playing state
+    if (playBtn.classList.contains('with-image')) {
+        // We're using images
+        const img = playBtn.querySelector('img');
+        if (isPlaying && playBtn.dataset.pauseImage) {
+            img.src = playBtn.dataset.pauseImage;
+            img.alt = playBtn.dataset.pauseText;
         } else {
-            // We're using text
-            playBtn.textContent = isPlaying ? '⏸' : '▶';
+            img.src = playBtn.dataset.playImage;
+            img.alt = playBtn.dataset.playText;
         }
-        
-        // Scale effect
-        playBtn.style.transform = isPlaying ? 'scale(1.1)' : 'scale(1)';
+    } else {
+        // We're using text
+        playBtn.textContent = isPlaying ? '⏸' : '▶';
     }
     
-            // Setup player glow effects
-            function setupPlayerGlow() {
-                const addGlowHandler = btn => {
-                    btn.addEventListener('mouseenter', () => btn.classList.add('glow'));
-                    btn.addEventListener('mouseleave', () => btn.classList.remove('glow'));
-                };
-                
-                ['play-btn', 'prev-btn', 'next-btn'].forEach(id => {
-                    const btn = document.getElementById(id);
-                    if (btn) addGlowHandler(btn);
-                });
-            }
+    // Scale effect
+    playBtn.style.transform = isPlaying ? 'scale(1.1)' : 'scale(1)';
+}
+
+// Setup player glow effects
+function setupPlayerGlow() {
+    const addGlowHandler = btn => {
+        btn.addEventListener('mouseenter', () => btn.classList.add('glow'));
+        btn.addEventListener('mouseleave', () => btn.classList.remove('glow'));
+    };
     
-            // Setup hover effects
-            function setupHoverEffects() {
-                const card = document.querySelector('.profile-card');
-                if (card) {
-                    card.addEventListener('mouseenter', () => {
-                        cursor.style.transform = 'scale(1.5)';
-                    });
-                    
-                    card.addEventListener('mouseleave', () => {
-                        cursor.style.transform = 'scale(1)';
-                    });
-                }
-    
-                document.querySelectorAll('button, a').forEach(element => {
-                    element.addEventListener('mouseenter', () => {
-                        cursor.style.transform = 'scale(1.5)';
-                        cursor.style.opacity = '0.8';
-                    });
-                    
-                    element.addEventListener('mouseleave', () => {
-                        cursor.style.transform = 'scale(1)';
-                        cursor.style.opacity = '1';
-                    });
-                });
-            }
-    
-            // Setup hover sound
-            let hoverSound = null;
-            function setupHoverSound() {
-                if (HOVER_SOUND_CONFIG.soundURL) {
-                    hoverSound = new Audio(HOVER_SOUND_CONFIG.soundURL);
-                    hoverSound.volume = HOVER_SOUND_CONFIG.volume;
-                    
-                    const card = document.querySelector('.profile-card');
-                    if (card) {
-                        card.addEventListener('mouseenter', () => {
-                            try {
-                                if (soundEnabled) {
-                                    hoverSound.currentTime = 0;
-                                    hoverSound.play();
-                                }
-                            } catch(e){}
-                        });
+    ['play-btn', 'prev-btn', 'next-btn'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) addGlowHandler(btn);
+    });
+}
+
+// Setup hover effects for all cards
+function setupHoverEffects() {
+    // Handle hover effects for all profile cards
+    document.querySelectorAll('.profile-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+        });
+    });
+
+    // Handle hover effects for buttons and links
+    document.querySelectorAll('button, a').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+            cursor.style.opacity = '0.8';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.opacity = '1';
+        });
+    });
+}
+
+// Setup hover sound
+let hoverSound = null;
+function setupHoverSound() {
+    if (HOVER_SOUND_CONFIG.soundURL) {
+        hoverSound = new Audio(HOVER_SOUND_CONFIG.soundURL);
+        hoverSound.volume = HOVER_SOUND_CONFIG.volume;
+        
+        document.querySelectorAll('.profile-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                try {
+                    if (soundEnabled) {
+                        hoverSound.currentTime = 0;
+                        hoverSound.play();
                     }
-                }
-            }
-    
-            // Setup click ring animation
-            function setupClickRing() {
-                let ringStage = document.getElementById('click-ring-effect');
-                if (!ringStage) {
-                    ringStage = document.createElement('div');
-                    ringStage.id = 'click-ring-effect';
-                    document.body.appendChild(ringStage);
-                }
-                
-                document.addEventListener('click', ev => {
-                    // Don't show ring if clicking on the custom sound toggle!
-                    if (ev.target.closest('#sound-toggle')) return;
-                    
-                    const ring = document.createElement('div');
-                    ring.className = 'ring';
-                    ring.style.left = ev.clientX + 'px';
-                    ring.style.top  = ev.clientY + 'px';
-                    ring.style.background = CLICK_RING_CONFIG.color;
-                    ring.style.setProperty('--ring-radius', CLICK_RING_CONFIG.finalRadius + 'px');
-                    ring.style.setProperty('--ring-duration', (CLICK_RING_CONFIG.duration/1000)+'s');
-                    ringStage.appendChild(ring);
-                    
-                    setTimeout(() => {
-                        ring.remove();
-                    }, CLICK_RING_CONFIG.duration + 100);
-                });
-            }
-    
-            // Initialize everything
-            window.addEventListener('DOMContentLoaded', () => {
-                loadCustomFonts();  // Load custom font files first
-                importCustomFonts(); // Keep your existing Google Fonts import if needed
-                applyCustomFonts();  // Apply the custom fonts to elements
-                setFavicon();
-                setSiteTitleImage();
-                setSubtitleImages(); 
-                setupCursorTrails();
-                setCursor();
-                setTrails();
-                applyVolumeSliderStyles();
-                setupCursorMovement();
-                insertProfileCardsStructure(); // Add this new function call
-                setupAllProfiles(); // Call this instead of the individual profile functions
-                updateTrackInfo();
-                updateVolumeDisplay();
-                setupMusicPlayer();
-                setupClickSound();
-                setupHoverSound();
-                setupPlayerGlow();
-                setupHoverEffects();
-                setupClickRing();
-                initializePaused();
-                setupEnterOverlay(); // New function for enter overlay
-                improveVideoSync(); // New function for better video sync
-                adjustSpacing();
+                } catch(e){}
             });
+        });
+    }
+}
+
+// Setup click ring animation
+function setupClickRing() {
+    let ringStage = document.getElementById('click-ring-effect');
+    if (!ringStage) {
+        ringStage = document.createElement('div');
+        ringStage.id = 'click-ring-effect';
+        document.body.appendChild(ringStage);
+    }
+    
+    document.addEventListener('click', ev => {
+        // Don't show ring if clicking on the custom sound toggle!
+        if (ev.target.closest('#sound-toggle')) return;
+        
+        const ring = document.createElement('div');
+        ring.className = 'ring';
+        ring.style.left = ev.clientX + 'px';
+        ring.style.top  = ev.clientY + 'px';
+        ring.style.background = CLICK_RING_CONFIG.color;
+        ring.style.setProperty('--ring-radius', CLICK_RING_CONFIG.finalRadius + 'px');
+        ring.style.setProperty('--ring-duration', (CLICK_RING_CONFIG.duration/1000)+'s');
+        ringStage.appendChild(ring);
+        
+        setTimeout(() => {
+            ring.remove();
+        }, CLICK_RING_CONFIG.duration + 100);
+    });
+}
+
+// Initialize everything
+window.addEventListener('DOMContentLoaded', () => {
+    loadCustomFonts();  // Load custom font files first
+    importCustomFonts(); // Keep your existing Google Fonts import if needed
+    applyCustomFonts();  // Apply the custom fonts to elements
+    setFavicon();
+    setSiteTitleImage();
+    setSubtitleImages(); 
+    setupCursorTrails();
+    setCursor();
+    setTrails();
+    applyVolumeSliderStyles();
+    setupCursorMovement();
+    
+    // Replace individual profile functions with our multi-profile setup
+    setupAllProfiles();
+    
+    updateTrackInfo();
+    updateVolumeDisplay();
+    setupMusicPlayer();
+    setupClickSound();
+    setupHoverSound();
+    setupPlayerGlow();
+    setupHoverEffects(); // Make sure this runs after setupAllProfiles
+    setupClickRing();
+    initializePaused();
+    setupEnterOverlay(); // This will handle the click-to-enter overlay
+    improveVideoSync();
+    adjustSpacing();
+});
         </script>
 </body>
 
