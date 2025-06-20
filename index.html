@@ -1087,10 +1087,6 @@ const PROFILES_CONFIG = [
         nameText: "Alex Chen", // Fallback if image can't load
         role: "Frontend Developer",
         bio: "Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.",
-        decoration: {
-            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
-            enabled: true
-        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1122,10 +1118,6 @@ const PROFILES_CONFIG = [
         nameText: "Jamie Wilson",
         role: "Backend Developer",
         bio: "Building robust server solutions and APIs. Passionate about performance optimization and clean code.",
-        decoration: {
-            image: "https://cdn-1.files.vc/files/wf7/46dd793bdd182bf02baa40a8363298e8.png",
-            enabled: true
-        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1157,10 +1149,6 @@ const PROFILES_CONFIG = [
         nameText: "Taylor Smith",
         role: "UI/UX Designer",
         bio: "Creating intuitive user experiences with a focus on aesthetic appeal and usability. Always exploring new design trends.",
-        decoration: {
-            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
-            enabled: true
-        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1192,10 +1180,6 @@ const PROFILES_CONFIG = [
         nameText: "Jordan Lee",
         role: "DevOps Engineer",
         bio: "Automating deployment processes and maintaining cloud infrastructure. Loves containers and continuous integration.",
-        decoration: {
-            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
-            enabled: true
-        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1227,10 +1211,6 @@ const PROFILES_CONFIG = [
         nameText: "Riley Morgan",
         role: "3D Artist",
         bio: "Creating immersive 3D worlds and characters. Specializes in realistic texturing and environmental design.",
-        decoration: {
-            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
-            enabled: true
-        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1262,10 +1242,6 @@ const PROFILES_CONFIG = [
         nameText: "Casey Johnson",
         role: "Community Manager",
         bio: "Building and nurturing online communities. Expert in social media strategies and user engagement techniques.",
-        decoration: {
-            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
-            enabled: true
-        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1476,26 +1452,11 @@ const FONT_CONFIG = {
                 }
                 
                 // Update avatar decoration
-      if (decoration) {
-        decoration.id = `avatar-decoration-${index}`;
-        
-        // Check if this profile has a decoration config and if it's enabled
-        if (config.decoration && config.decoration.enabled && config.decoration.image) {
-            // Use this profile's specific decoration
-            decoration.style.backgroundImage = `url(${config.decoration.image})`;
-            decoration.style.display = 'block';
-        } else if (AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
-            // Fall back to global decoration if profile doesn't specify one
-            decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
-            decoration.style.display = 'block';
-        } else {
-            // No decoration for this profile
-            decoration.style.display = 'none';
-        }
-    }
-    
-    // [Rest of the function remains unchanged...]
-}      
+                if (decoration && AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+                    decoration.id = `avatar-decoration-${index}`;
+                    decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+                }
+                
                 // Update name container
                 if (nameContainer) {
                     nameContainer.id = `profile-${index}-name-container`;
