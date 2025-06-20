@@ -759,6 +759,28 @@
         .profile-name {
             transition: transform 0.18s cubic-bezier(0.16,0.68,0.47,1.73);
         }
+/* Profile Cards Container */
+.profile-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-cards-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    
+    .profile-card {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+}
 
 
         /* Click Ring Animation */
@@ -868,25 +890,104 @@
         <!-- Audio element for click sound -->
         <audio id="click-sound" preload="auto"></audio>
 
-        <!-- Single Centered Profile -->
-        <div class="profile-card" id="profile-card-1">
-            <div class="profile-avatar-container">
-                <div class="avatar-decoration" id="avatar-decoration"></div>
-                <div class="profile-avatar" id="profile-1"></div>
-            </div>
-
-            <div class="profile-name-container" id="profile-1-name-container">
-                <!-- Background and name image will be inserted here by JavaScript -->
-            </div>
-
-            <p class="profile-role" id="profile-role">Frontend Developer</p>
-
-            <p class="profile-bio" id="profile-bio">Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.</p>
-
-            <div class="profile-links" id="profile-links">
-                <!-- Links will be inserted here by JavaScript -->
-            </div>
+<!-- Profile Cards Container -->
+<div class="profile-cards-container">
+    <!-- Profile 1 -->
+    <div class="profile-card" id="profile-card-1">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration-1"></div>
+            <div class="profile-avatar" id="profile-1"></div>
         </div>
+        <div class="profile-name-container" id="profile-1-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+        <p class="profile-role" id="profile-role-1">Frontend Developer</p>
+        <p class="profile-bio" id="profile-bio-1">Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.</p>
+        <div class="profile-links" id="profile-links-1">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Profile 2 -->
+    <div class="profile-card" id="profile-card-2">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration-2"></div>
+            <div class="profile-avatar" id="profile-2"></div>
+        </div>
+        <div class="profile-name-container" id="profile-2-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+        <p class="profile-role" id="profile-role-2">Backend Developer</p>
+        <p class="profile-bio" id="profile-bio-2">Building robust server solutions and APIs. Passionate about performance optimization and clean code.</p>
+        <div class="profile-links" id="profile-links-2">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Profile 3 -->
+    <div class="profile-card" id="profile-card-3">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration-3"></div>
+            <div class="profile-avatar" id="profile-3"></div>
+        </div>
+        <div class="profile-name-container" id="profile-3-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+        <p class="profile-role" id="profile-role-3">UI/UX Designer</p>
+        <p class="profile-bio" id="profile-bio-3">Creating intuitive user experiences with a focus on aesthetic appeal and usability. Always exploring new design trends.</p>
+        <div class="profile-links" id="profile-links-3">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Profile 4 -->
+    <div class="profile-card" id="profile-card-4">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration-4"></div>
+            <div class="profile-avatar" id="profile-4"></div>
+        </div>
+        <div class="profile-name-container" id="profile-4-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+        <p class="profile-role" id="profile-role-4">DevOps Engineer</p>
+        <p class="profile-bio" id="profile-bio-4">Automating deployment processes and maintaining cloud infrastructure. Loves containers and continuous integration.</p>
+        <div class="profile-links" id="profile-links-4">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Profile 5 -->
+    <div class="profile-card" id="profile-card-5">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration-5"></div>
+            <div class="profile-avatar" id="profile-5"></div>
+        </div>
+        <div class="profile-name-container" id="profile-5-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+        <p class="profile-role" id="profile-role-5">3D Artist</p>
+        <p class="profile-bio" id="profile-bio-5">Creating immersive 3D worlds and characters. Specializes in realistic texturing and environmental design.</p>
+        <div class="profile-links" id="profile-links-5">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Profile 6 -->
+    <div class="profile-card" id="profile-card-6">
+        <div class="profile-avatar-container">
+            <div class="avatar-decoration" id="avatar-decoration-6"></div>
+            <div class="profile-avatar" id="profile-6"></div>
+        </div>
+        <div class="profile-name-container" id="profile-6-name-container">
+            <!-- Background and name image will be inserted here by JavaScript -->
+        </div>
+        <p class="profile-role" id="profile-role-6">Community Manager</p>
+        <p class="profile-bio" id="profile-bio-6">Building and nurturing online communities. Expert in social media strategies and user engagement techniques.</p>
+        <div class="profile-links" id="profile-links-6">
+            <!-- Links will be inserted here by JavaScript -->
+        </div>
+    </div>
+</div>
 
         <script>
             // ============ Enforce Bullshit ============
@@ -921,11 +1022,6 @@
             
             // ============ EASY CONFIGURATION SECTION ============
             
-            // Profile Name Background Image Configuration
-            const PROFILE_NAME_BG_CONFIG = {
-                image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif", // Replace with your background image URL (can be GIF)
-                opacity: 0.7 // Opacity level from 0.0 to 1.0
-            };
             
             // Click Sound Configuration
             const CLICK_SOUND_CONFIG = {
@@ -946,11 +1042,6 @@
                 altText: ">,..,<" // Alternative text if image fails to load
             };
             
-            // Profile Name Image Configuration
-            const PROFILE_NAME_CONFIG = {
-                image: "https://files.catbox.moe/wrbpb1.png", // Replace with your name image URL
-                altText: "Alex Chen" // Alternative text if image fails to load
-            };
             
             // Custom Cursor Configuration
             const CURSOR_CONFIG = {
@@ -1072,42 +1163,194 @@ const VOLUME_SLIDER_CONFIG = {
             };
     
             // Profile Configuration (Now with button icon images!)
-            const PROFILE_CONFIG = {
-                avatar: "https://files.catbox.moe/dufd34.png",
-                nameImage: "https://files.catbox.moe/wrbpb1.png",
-                nameText: "Alex Chen", // Fallback if image can't load
-                role: "Frontend Developer",
-                bio: "Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.",
-                nameBg: {
-                    image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
-                    opacity: 0.7
-                },
-                links: [
-                    { 
-                        text: "GitHub", 
-                        url: "#", 
-                        icon: "🌐",
-                        iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png?ex=6854eeb1&is=684279b1&hm=6ccfd6c044416b32c7190462eeba1c93afe557a4a27ebe20478a5ff939e4ab13&=&format=webp&quality=lossless&width=500&height=500"
-                    },
-                    { 
-                        text: "Twitter", 
-                        url: "#", 
-                        icon: "🦋",
-                        iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png?ex=6854eec9&is=684279c9&hm=a8ab17c2d6127a5899608e92564b2f22c674989be250b0df82f68e3259f25004&=&format=webp&quality=lossless&width=500&height=500"
-                    },
-                    { 
-                        text: "Portfolio", 
-                        url: "#", 
-                        icon: "📂",
-                        iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png?ex=6854eed9&is=684279d9&hm=0faeb2a8e91c7853a4cd48ff64b074c28d4bd0e06abbdd5e616f2505614548bf&=&format=webp&quality=lossless&width=480&height=480"
-                    }
-                ],
-                fonts: {
-                    role: "'JetBrains Mono', monospace",
-                    bio: "'JetBrains Mono', monospace",
-                    buttons: "'JetBrains Mono', monospace"
-                }
-            };
+const PROFILES_CONFIG = [
+    {
+        avatar: "https://files.catbox.moe/dufd34.png",
+        nameImage: "https://files.catbox.moe/wrbpb1.png",
+        nameText: "Alex Chen", // Fallback if image can't load
+        role: "Frontend Developer",
+        bio: "Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        links: [
+            { 
+                text: "GitHub", 
+                url: "#", 
+                icon: "🌐",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png"
+            },
+            { 
+                text: "Twitter", 
+                url: "#", 
+                icon: "🦋",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png"
+            },
+            { 
+                text: "Portfolio", 
+                url: "#", 
+                icon: "📂",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png"
+            }
+        ]
+    },
+    {
+        avatar: "https://files.catbox.moe/dufd34.png", // Replace with different avatar
+        nameImage: "https://files.catbox.moe/wrbpb1.png", // Replace with different name image
+        nameText: "Jamie Wilson",
+        role: "Backend Developer",
+        bio: "Building robust server solutions and APIs. Passionate about performance optimization and clean code.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        links: [
+            { 
+                text: "GitHub", 
+                url: "#", 
+                icon: "🌐",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png"
+            },
+            { 
+                text: "LinkedIn", 
+                url: "#", 
+                icon: "🦋",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png"
+            },
+            { 
+                text: "Blog", 
+                url: "#", 
+                icon: "📂",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png"
+            }
+        ]
+    },
+    {
+        avatar: "https://files.catbox.moe/dufd34.png", // Replace with different avatar
+        nameImage: "https://files.catbox.moe/wrbpb1.png", // Replace with different name image
+        nameText: "Taylor Smith",
+        role: "UI/UX Designer",
+        bio: "Creating intuitive user experiences with a focus on aesthetic appeal and usability. Always exploring new design trends.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        links: [
+            { 
+                text: "Dribbble", 
+                url: "#", 
+                icon: "🌐",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png"
+            },
+            { 
+                text: "Behance", 
+                url: "#", 
+                icon: "🦋",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png"
+            },
+            { 
+                text: "Portfolio", 
+                url: "#", 
+                icon: "📂",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png"
+            }
+        ]
+    },
+    {
+        avatar: "https://files.catbox.moe/dufd34.png", // Replace with different avatar
+        nameImage: "https://files.catbox.moe/wrbpb1.png", // Replace with different name image
+        nameText: "Jordan Lee",
+        role: "DevOps Engineer",
+        bio: "Automating deployment processes and maintaining cloud infrastructure. Loves containers and continuous integration.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        links: [
+            { 
+                text: "GitHub", 
+                url: "#", 
+                icon: "🌐",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png"
+            },
+            { 
+                text: "LinkedIn", 
+                url: "#", 
+                icon: "🦋",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png"
+            },
+            { 
+                text: "Tech Blog", 
+                url: "#", 
+                icon: "📂",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png"
+            }
+        ]
+    },
+    {
+        avatar: "https://files.catbox.moe/dufd34.png", // Replace with different avatar
+        nameImage: "https://files.catbox.moe/wrbpb1.png", // Replace with different name image
+        nameText: "Riley Morgan",
+        role: "3D Artist",
+        bio: "Creating immersive 3D worlds and characters. Specializes in realistic texturing and environmental design.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        links: [
+            { 
+                text: "ArtStation", 
+                url: "#", 
+                icon: "🌐",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png"
+            },
+            { 
+                text: "YouTube", 
+                url: "#", 
+                icon: "🦋",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png"
+            },
+            { 
+                text: "Portfolio", 
+                url: "#", 
+                icon: "📂",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png"
+            }
+        ]
+    },
+    {
+        avatar: "https://files.catbox.moe/dufd34.png", // Replace with different avatar
+        nameImage: "https://files.catbox.moe/wrbpb1.png", // Replace with different name image
+        nameText: "Casey Johnson",
+        role: "Community Manager",
+        bio: "Building and nurturing online communities. Expert in social media strategies and user engagement techniques.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        links: [
+            { 
+                text: "Twitter", 
+                url: "#", 
+                icon: "🌐",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125668258664650/20250618_233825.png"
+            },
+            { 
+                text: "Discord", 
+                url: "#", 
+                icon: "🦋",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125766284059668/20250618_233854.png"
+            },
+            { 
+                text: "LinkedIn", 
+                url: "#", 
+                icon: "📂",
+                iconImage: "https://media.discordapp.net/attachments/719009150469931069/1385125833619173416/20250618_233917.png"
+            }
+        ]
+    }
+];
     // Custom Font Configuration
 const FONT_CONFIG = {
     // Main site fonts
@@ -1821,6 +2064,197 @@ function loadCustomFonts() {
     fontStyle.textContent = fontFacesCSS;
     document.head.appendChild(fontStyle);
 }
+// New function to set up all profiles
+function setupAllProfiles() {
+    for (let i = 0; i < PROFILES_CONFIG.length; i++) {
+        const profileIndex = i + 1; // Profile IDs start at 1
+        setProfileNameBackground(profileIndex);
+        setProfileNameImage(profileIndex);
+        setProfileContent(profileIndex);
+        setProfileLinks(profileIndex);
+    }
+}
+
+// Update the existing functions to accept a profile index parameter
+function setProfileNameBackground(profileIndex) {
+    const profileNameContainer = document.getElementById(`profile-${profileIndex}-name-container`);
+    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
+    
+    if (profileNameContainer && profileConfig.nameBg && profileConfig.nameBg.image) {
+        // Create the background image element
+        const backgroundImg = document.createElement('img');
+        backgroundImg.src = profileConfig.nameBg.image;
+        backgroundImg.className = 'profile-name-bg';
+        backgroundImg.style.opacity = profileConfig.nameBg.opacity || 0.7;
+        
+        // Insert at the beginning of the container
+        profileNameContainer.insertBefore(backgroundImg, profileNameContainer.firstChild);
+    }
+}
+
+function setProfileNameImage(profileIndex) {
+    const profileNameContainer = document.getElementById(`profile-${profileIndex}-name-container`);
+    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
+    
+    if (profileNameContainer && profileConfig.nameImage) {
+        // Create image element
+        const nameImage = document.createElement('img');
+        nameImage.src = profileConfig.nameImage;
+        nameImage.alt = profileConfig.nameText;
+        nameImage.className = 'profile-name-img';
+        
+        // Add to container
+        profileNameContainer.appendChild(nameImage);
+        
+        // Add zoom event listeners
+        nameImage.addEventListener('mouseenter', () => nameImage.classList.add('zoom'));
+        nameImage.addEventListener('mouseleave', () => nameImage.classList.remove('zoom'));
+    } else if (profileNameContainer) {
+        // Create text element as fallback
+        const nameText = document.createElement('h2');
+        nameText.className = 'profile-name';
+        nameText.textContent = profileConfig.nameText;
+        
+        // Add to container
+        profileNameContainer.appendChild(nameText);
+        
+        // Add zoom event listeners
+        nameText.addEventListener('mouseenter', () => nameText.classList.add('zoom'));
+        nameText.addEventListener('mouseleave', () => nameText.classList.remove('zoom'));
+    }
+}
+
+function setProfileLinks(profileIndex) {
+    const profileLinksContainer = document.getElementById(`profile-links-${profileIndex}`);
+    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
+    
+    if (profileLinksContainer && profileConfig.links) {
+        // Clear existing links
+        profileLinksContainer.innerHTML = '';
+        
+        // Add each configured link
+        profileConfig.links.forEach(link => {
+            const linkElement = document.createElement('a');
+            linkElement.href = link.url || '#';
+            linkElement.className = 'profile-link';
+            
+            // Apply custom font to button if specified
+            if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.buttons) {
+                linkElement.style.fontFamily = PROFILE_CONFIG.fonts.buttons;
+            }
+            
+            // Add icon based on configuration
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'link-icon';
+            
+            // Use icon image if provided, otherwise use text icon
+            if (link.iconImage) {
+                const iconImg = document.createElement('img');
+                iconImg.src = link.iconImage;
+                iconImg.alt = link.text;
+                iconSpan.appendChild(iconImg);
+            } else {
+                iconSpan.textContent = link.icon || '🔗';
+            }
+            
+            linkElement.appendChild(iconSpan);
+            
+            // Add text
+            const textSpan = document.createElement('span');
+            textSpan.textContent = link.text || 'Link';
+            linkElement.appendChild(textSpan);
+            
+            profileLinksContainer.appendChild(linkElement);
+        });
+    }
+}
+
+function setProfileContent(profileIndex) {
+    const profileConfig = PROFILES_CONFIG[profileIndex - 1];
+    
+    // Set avatar image
+    const avatarElement = document.getElementById(`profile-${profileIndex}`);
+    if (avatarElement && profileConfig.avatar) {
+        avatarElement.style.backgroundImage = `url(${profileConfig.avatar})`;
+    }
+    
+    // Set avatar decoration
+    const decorationElement = document.getElementById(`avatar-decoration-${profileIndex}`);
+    if (decorationElement && AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+        decorationElement.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+    } else if (decorationElement) {
+        decorationElement.style.display = 'none';
+    }
+    
+    // Set role text
+    const roleElement = document.getElementById(`profile-role-${profileIndex}`);
+    if (roleElement) {
+        roleElement.textContent = profileConfig.role;
+        if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.role) {
+            roleElement.style.fontFamily = PROFILE_CONFIG.fonts.role;
+        }
+    }
+    
+    // Set bio text
+    const bioElement = document.getElementById(`profile-bio-${profileIndex}`);
+    if (bioElement) {
+        bioElement.textContent = profileConfig.bio;
+        if (PROFILE_CONFIG.fonts && PROFILE_CONFIG.fonts.bio) {
+            bioElement.style.fontFamily = PROFILE_CONFIG.fonts.bio;
+        }
+    }
+}
+
+// Update the setupHoverEffects function to handle all profile cards
+function setupHoverEffects() {
+    const cards = document.querySelectorAll('.profile-card');
+    if (cards.length > 0) {
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+        });
+    }
+
+    document.querySelectorAll('button, a').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+            cursor.style.opacity = '0.8';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.opacity = '1';
+        });
+    });
+}
+
+// Update the DOM Content Loaded section to include our new structure
+// In the window.addEventListener('DOMContentLoaded', ...) function,
+// right before the existing profile card setup, add this code:
+function insertProfileCardsStructure() {
+    // First, add the CSS for profile cards layout
+    const style = document.createElement('style');
+    style.textContent = profileCardsCSS;
+    document.head.appendChild(style);
+    
+    // Then, replace the single profile card with multiple cards
+    const container = document.querySelector('.container');
+    const existingProfileCard = document.getElementById('profile-card-1');
+    
+    if (container && existingProfileCard) {
+        // Create a temporary container
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = profileCardsHTML;
+        
+        // Replace the existing card with our new structure
+        container.replaceChild(tempDiv.firstElementChild, existingProfileCard);
+    }
+}
 // Add this to your existing page
 function adjustSpacing() {
     // Create a style element
@@ -2140,10 +2574,8 @@ function applyCustomFonts() {
                 setTrails();
                 applyVolumeSliderStyles();
                 setupCursorMovement();
-                setProfileNameBackground();
-                setProfileNameImage();
-                setProfileContent();
-                setProfileLinks();
+                insertProfileCardsStructure(); // Add this new function call
+                setupAllProfiles(); // Call this instead of the individual profile functions
                 updateTrackInfo();
                 updateVolumeDisplay();
                 setupMusicPlayer();
