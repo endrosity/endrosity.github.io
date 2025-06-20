@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Divas</title>
+    <!-- Favicon will be set dynamically via JavaScript -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0f0f0f;
+            --secondary-bg: #1a1a1a;
+            --accent: #ffffff;
+            --accent-hover: #e0e0e0;
+            --text: #ffffff;
+            --text-dim: #888888;
+            --border: #333333;
+            --card-bg: #171717;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--primary-bg), #1f1f1f);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        * {
+            cursor: none !important;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.1s ease;
+            border-radius: 50%;
+            background-color: #ffffff;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #ff69b4;
+            pointer-events: none;
+            z-index: 99998;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* Blur-in Animation */
+        .blur-in {
+            animation: blurIn 1.5s ease-out forwards;
+            filter: blur(10px);
+            opacity: 0;
+        }
+
+        @keyframes blurIn {
+            to {
+                filter: blur(0);
+                opacity: 1;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            min-height: 100vh;
+            padding: 2rem;
+            padding-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--accent), #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .site-title-img {
+            max-width: 300px;
+            max-height: 100px;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(23, 23, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 280px;
+            max-width: 320px;
+            z-index: 1000;
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .album-art {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #555555, #777777);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .track-info h3 {
+            font-size: 0.8rem;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        .track-info p {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            line-height: 1.2;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1rem;
+            padding: 0.4rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+.control-btn {
+    position: relative;
+    overflow: visible;
+}
+
+/* The circular glow is created by a pseudo-element, only visible when parent has .glow */
+.control-btn.glow::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: var(--glow-size, 54px);
+    height: var(--glow-size, 54px);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent) 45%, transparent 70%);
+    opacity: 0.34;
+    z-index: 0; /* beneath icon */
+    animation: glowing-circ 0.6s cubic-bezier(0.6, 0.09, 0.4, 1);
+    pointer-events: none;
+}
+
+@keyframes glowing-circ {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    70% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.13);
+    }
+    100% {
+        opacity: 0.34;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Ensure button content is above the glow */
+.control-btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+        .play-btn {
+            background: var(--accent);
+            color: var(--primary-bg);
+            font-size: 1.1rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            min-width: 32px;
+            height: 32px;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-hover);
+            color: var(--primary-bg);
+        }
+
+        /* Volume Control */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .volume-icon {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            min-width: 20px;
+        }
+
+        .volume-slider-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            outline: none;
+            appearance: none;
+            cursor: none;
+            position: relative;
+        }
+
+        .volume-slider::-webkit-slider-track {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: none;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .volume-slider::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            border: none;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: none;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .volume-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            pointer-events: none;
+            transition: width 0.1s ease;
+        }
+
+        .volume-percent {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            min-width: 30px;
+            text-align: right;
+        }
+
+        /* Profile Grid */
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .profile-card {
+            background: rgba(23, 23, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .profile-card:hover::before {
+            left: 100%;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+
+/* Avatar style */
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit; /* Inherit from the container */
+    background: linear-gradient(45deg, #555555, #777777);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.3s ease;
+}
+/* Avatar container to hold the avatar and its decoration */
+.avatar-container {
+    position: relative;
+    width: 100px;       /* Same as your avatar width */
+    height: 100px;      /* Same as your avatar height */
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+}
+
+/* Avatar style */
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit; /* Inherit from the container */
+    background: linear-gradient(45deg, #555555, #777777);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.3s ease;
+}
+
+/* Avatar decoration style */
+.avatar-decoration {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none; /* Prevents the decoration from interfering with hover effects */
+}
+/* Avatar container to hold the avatar and its decoration */
+.avatar-container {
+    position: relative;
+    width: 100px;       /* Same as your avatar width */
+    height: 100px;      /* Same as your avatar height */
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+}
+
+.profile-card:hover .profile-avatar {
+    transform: scale(1.05);
+    border-color: var(--accent);
+}
+
+        .profile-card:hover .profile-avatar {
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+
+        /* Profile name styling with background image support */
+        .profile-name-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+ .profile-name-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 75%;
+    height: 75%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+        }
+
+        .profile-name-img {
+            max-width: 200px;
+            max-height: 60px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-role {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .profile-bio {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        .profile-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .profile-link {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--accent);
+            border-radius: 25px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-link:hover {
+            background: var(--accent);
+            color: var(--primary-bg);
+            transform: scale(1.05);
+        }
+
+        /* Sound control button */
+        .sound-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(23, 23, 23, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 1.2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sound-control:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+            color: var(--primary-bg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { 
+                font-size: 2rem; 
+            }
+            .site-title-img {
+                max-width: 220px;
+            }
+            .music-player { 
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 2rem;
+                min-width: 260px;
+                max-width: 280px;
+            }
+            .container {
+                padding-top: 2rem;
+            }
+            .header {
+                margin-top: 0;
+            }
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-name-img {
+                max-width: 150px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .profiles-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        /* Ensure content doesn't overlap with music player on larger screens */
+        @media (min-width: 769px) {
+            .header {
+                margin-left: 340px; /* Music player width + some margin */
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .header {
+                margin-left: 0; /* Reset for very large screens */
+            }
+        }
+/* Title Zoom for first profile */
+.profile-name-img.zoom,
+.profile-name.zoom {
+    transition: transform 0.2s cubic-bezier(0.25,0.1,0.35,1.6);
+    transform: scale(1.15);
+}
+.profile-name-img,
+.profile-name {
+    transition: transform 0.18s cubic-bezier(0.16,0.68,0.47,1.73);
+}
+
+/* Click Ring Animation */
+#click-ring-effect {
+    pointer-events: none;
+    position: fixed;
+    left: 0; top: 0;
+}
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: none;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: rippleClickAnim var(--ring-duration,0.7s) ease;
+}
+
+@keyframes rippleClickAnim {
+    from {
+        opacity: 0.55;
+        width: 0px;
+        height: 0px;
+    }
+    to {
+        opacity: 0;
+        width: var(--ring-radius,80px);
+        height: var(--ring-radius,80px);
+    }
+}
+#bg-video {
+    position: fixed;
+    left: 0; top: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    background: #000;
+    pointer-events: none;
+    opacity: 1; /* lower = more transparent, tweak as you want */
+    transition: opacity 0.5s;
+}
+body.has-bgvideo {
+    background: none !important;
+}
+/* Add to the existing CSS */
+
+/* Profile name styling with background image support - for all profiles */
+.profile-name-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.profile-name-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+}
+
+.profile-name-img {
+    max-width: 200px;
+    max-height: 60px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.18s cubic-bezier(0.16,0.68,0.47,1.73);
+}
+
+/* Title Zoom for all profiles */
+.profile-name-img.zoom,
+.profile-name.zoom {
+    transition: transform 0.2s cubic-bezier(0.25,0.1,0.35,1.6);
+    transform: scale(1.15);
+}
+
+/* Profile link with icon */
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--accent);
+    border-radius: 25px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.profile-link:hover {
+    background: var(--accent);
+    color: var(--primary-bg);
+    transform: scale(1.05);
+}
+
+.link-icon {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .profile-name-img {
+        max-width: 150px;
+    }
+}
+    </style>
+</head>
+<body>
+<video id="bg-video" autoplay muted loop playsinline style="display:none;"></video>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Main Container -->
+    <div class="container blur-in">
+        <!-- Header -->
+        <div class="header">
+            <!-- Site title will be replaced with an image via JavaScript -->
+            <h1 id="site-title">Our Collective</h1>
+            <p>Meet the people behind the magic</p>
+        </div>
+
+        <!-- Music Player -->
+        <div class="music-player">
+            <div class="player-header">
+                <div class="album-art">♪</div>
+                <div class="track-info">
+                    <h3 id="track-title">Neon Dreams</h3>
+                    <p id="track-artist">Synthwave Collective</p>
+                </div>
+            </div>
+            <div class="player-controls">
+                <button class="control-btn" id="prev-btn">⏮</button>
+                <button class="control-btn play-btn" id="play-btn">▶</button>
+                <button class="control-btn" id="next-btn">⏭</button>
+            </div>
+            <div class="volume-control">
+                <div class="volume-icon">🔊</div>
+                <div class="volume-slider-container">
+                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
+                    <div class="volume-fill" id="volume-fill"></div>
+                </div>
+                <div class="volume-percent" id="volume-percent">50%</div>
+            </div>
+            <audio id="audio-player" preload="metadata"></audio>
+        </div>
+
+        <!-- Sound control button -->
+        <button class="sound-control" id="sound-toggle">🔊</button>
+
+        <!-- Audio element for click sound -->
+        <audio id="click-sound" preload="auto"></audio>
+
+        <!-- Profiles Grid -->
+       <!-- Updated HTML for the profiles grid -->
+<div class="profiles-grid">
+    <!-- Dynamic profiles will be inserted here by JavaScript -->
+</div>
+    <script>
+        // ============ EASY CONFIGURATION SECTION ============
+        
+        // First Profile Name Background Image Configuration
+        const PROFILE_NAME_BG_CONFIG = {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif", // Replace with your background image URL (can be GIF)
+            opacity: 0.7 // Opacity level from 0.0 to 1.0
+        };
+        
+        // Click Sound Configuration
+        const CLICK_SOUND_CONFIG = {
+            soundURL: "https://cdn.discordapp.com/attachments/1384835227553366087/1384835268556754974/audio_2025-06-18_06-00-36.ogg?ex=6853dfd9&is=68528e59&hm=816e66e012349cdfa30e34d9bf408e5c066869d0055cd1a929e0c3fae14e898f&", // Replace with your sound effect URL
+            volume: 0.3, // Volume level from 0.0 to 1.0
+            enabled: true, // Set to false to have sounds disabled by default
+            throttleMS: 1500 // Minimum time between sounds in milliseconds (prevents sound spam)
+        };
+        
+        // Favicon Configuration
+        const FAVICON_CONFIG = {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384789274188054619/20250618_025805.png?ex=6853b503&is=68526383&hm=983dc8de1380b002744f82f6eea2158ae3c755199a60d2f0c660e59e33d99432&=&format=webp&quality=lossless&width=960&height=960" // Replace with your favicon URL
+        };
+        
+        // Site Title Image Configuration
+        const SITE_TITLE_CONFIG = {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384794985467084800/20250618_032045.png?ex=6853ba54&is=685268d4&hm=76386c0611433ba732015358214a9464358ea7a757977be134f3f0b293e8e026&=&format=webp&quality=lossless", // Replace with your site title image URL
+            altText: "OSINT Divas" // Alternative text if image fails to load
+        };
+        
+        // First Profile Name Image Configuration
+        const PROFILE_NAME_CONFIG = {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384835928971018411/20250618_060326.png?ex=6853e076&is=68528ef6&hm=a8a4d1c7f1b73e281e40c084525d0481a97a5361f9c5d0674b3778bf364d4f7d&=&format=webp&quality=lossless", // Replace with your name image URL
+            altText: "Alex Chen" // Alternative text if image fails to load
+        };
+        
+        // Custom Cursor Configuration
+        const CURSOR_CONFIG = {
+            image: "https://media.discordapp.net/attachments/1233881524550635650/1331928429108658216/Picsart_25-01-23_05-06-07-515.png?ex=685338c3&is=6851e743&hm=0275e46e3661d4cf6b649b16b1a790de18ac2f42261ed2a33224e830fd9af4ca&=&format=webp&quality=lossless&width=856&height=856", // Add your cursor image URL here, leave empty for default white circle
+            color: "#ffffff", // Fallback color if no image
+            size: 50 // Size in pixels
+        };
+
+        // Cursor Trail Configuration
+        const TRAIL_CONFIG = {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384827710257238066/20250618_053049.png?ex=6853d8ce&is=6852874e&hm=69938129f9453d5e90de07e53e2a460c52b68bd515d2ae98522e34b286acdb97&=&format=webp&quality=lossless&width=960&height=960", // Add your trail image URL here, leave empty for default heart shape
+            color: "#ff69b4", // Fallback color if no image
+            size: 15, // Size in pixels
+            count: 10 // Number of trail elements
+        };
+
+        // Profile Pictures Configuration
+        // Replace the URLs below with your actual image URLs
+
+        // Music Tracks Configuration
+        const MUSIC_TRACKS = [
+            { 
+                title: 'SLAY THE SYSTEM!', 
+                artist: 'Pasteldrip', 
+                file: '/slay.mp3',
+                thumbnail: '/slay.jpg',
+                videoBg: "https://files.catbox.moe/idv4og.mp4"
+            },
+            { 
+                title: 'haunted', 
+                artist: 'Mezha', 
+                file: '/haunted.mp3',
+                thumbnail: '/haunted.jpg',
+                videoBg: "https://files.catbox.moe/s63m31.mp4"
+            },
+            { 
+                title: 'Get Used To It', 
+                artist: 'FROMTHEHEART (ft. VALENTINE, Kmoe, Osquinn, Brakence, Ericdoa, Glaive)', 
+                file: '/getusedtoit.mp3',
+                thumbnail: '/getusedtoit.png',
+                videoBg: "https://files.catbox.moe/jxi7si.mp4"
+            },
+            { 
+                title: 'Electric Memories', 
+                artist: 'Wave Runner', 
+                file: 'path/to/your/music/electric-memories.mp3',
+                thumbnail: 'path/to/thumbnails/electric-memories.jpg',
+                videoBg: "https://www.w3schools.com/howto/rain.mp4"
+            }
+        ];
+const AUTO_PAUSE_CONFIG = {
+    enabled: true, // Set to true to ensure everything starts paused
+    defaultVolume: 1 // Default volume level (0-100)
+};
+// --- HOVER SOUND CONFIG ---
+const HOVER_SOUND_CONFIG = {
+    soundURL: "", // Replace with your own hover sound!
+    volume: 0.7
+};
+// The sound file should be short and not annoying :)
+
+// --- CLICK RING ANIMATION CONFIG ---
+const CLICK_RING_CONFIG = {
+    color: "rgba(255,255,255,0.55)", // Ring color (white with fade)
+    initialRadius: 0, // px
+    finalRadius: 85, // px
+    duration: 700 // ms
+};
+// First, we'll expand the configuration section to include settings for all profiles
+
+// ============ ENHANCED CONFIGURATION SECTION ============
+
+// Profile Configuration
+const PROFILES_CONFIG = {
+    // Profile 1
+    "profile-1": {
+        avatar: "https://media.discordapp.net/attachments/1294860598311522324/1385098207196872754/IMG_20250613_023528_253.webp?ex=6854d4ba&is=6853833a&hm=1b4129fbb595ce0312fa98f99103f55c6c3ca70fdac49679f8f72f55003b3342&=&format=webp&width=960&height=960",
+        nameImage: "https://media.discordapp.net/attachments/719009150469931069/1384835928971018411/20250618_060326.png?ex=68548936&is=685337b6&hm=74adf4584e69e37909f030cb4ffdc23f42d9a5f99f678ff1fca53c0729116501&=&format=webp&quality=lossless",
+        nameText: "Alex Chen", // Fallback if image can't load
+        role: "Frontend Developer",
+        bio: "Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.",
+        nameBg: {
+            image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
+            opacity: 0.7
+        },
+        avatarDecoration: {
+            image: "https://wound.lol/decorations/cat_ears.png",  // URL for the decoration image
+            size: 70,          // Size of the decoration in percentage relative to avatar
+            offsetX: 0,        // Horizontal offset in percentage
+            offsetY: 0         // Vertical offset in percentage
+        },
+        links: [
+            { text: "GitHub", url: "#", icon: "🌐" },
+            { text: "Twitter", url: "#", icon: "🐦" },
+            { text: "Portfolio", url: "#", icon: "📂" }
+        ],
+        fonts: {
+            role: "'JetBrains Mono', monospace",
+            bio: "'JetBrains Mono', monospace",
+            buttons: "'JetBrains Mono', monospace"
+        }
+    },
+    
+    // Profile 2
+    "profile-2": {
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b2e6e8e8?w=200&h=200&fit=crop&crop=face",
+        nameImage: "https://media.discordapp.net/attachments/719009150469931069/1384840187833917460/20250618_062050.png",
+        nameText: "Maya Rodriguez",
+        role: "UI/UX Designer",
+        bio: "Crafting digital experiences that tell stories. Believer in the power of good design to change the world.",
+        nameBg: {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384840370197610606/20250618_062147.gif",
+            opacity: 0.6
+        },
+        links: [
+            { text: "Dribbble", url: "#", icon: "🎨" },
+            { text: "Behance", url: "#", icon: "🖌️" },
+            { text: "Instagram", url: "#", icon: "📸" }
+        ],
+        fonts: {
+            role: "'JetBrains Mono', monospace", 
+            bio: "'JetBrains Mono', monospace",
+            buttons: "'JetBrains Mono', monospace"
+        }
+    },
+
+    // Profile 3
+    "profile-3": {
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+        nameImage: "https://media.discordapp.net/attachments/719009150469931069/1384840520798793841/20250618_062242.png",
+        nameText: "Jordan Kim",
+        role: "Full-Stack Engineer",
+        bio: "Building scalable applications and exploring the intersection of art and technology. Coffee enthusiast.",
+        nameBg: {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384840774713098290/20250618_062350.gif",
+            opacity: 0.5
+        },
+        links: [
+            { text: "LinkedIn", url: "#", icon: "💼" },
+            { text: "Medium", url: "#", icon: "📝" },
+            { text: "Website", url: "#", icon: "🌍" }
+        ],
+        fonts: {
+            role: "'JetBrains Mono', monospace",
+            bio: "'JetBrains Mono', monospace",
+            buttons: "'JetBrains Mono', monospace"
+        }
+    },
+
+    // Profile 4
+    "profile-4": {
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
+        nameImage: "https://media.discordapp.net/attachments/719009150469931069/1384840883869036636/20250618_062417.png",
+        nameText: "Sam Taylor",
+        role: "Creative Director",
+        bio: "Visionary behind brand identities and digital campaigns. Always pushing creative boundaries.",
+        nameBg: {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384841014693789828/20250618_062451.gif",
+            opacity: 0.6
+        },
+        links: [
+            { text: "Portfolio", url: "#", icon: "🎭" },
+            { text: "Instagram", url: "#", icon: "📸" },
+            { text: "Vimeo", url: "#", icon: "🎬" }
+        ],
+        fonts: {
+            role: "'JetBrains Mono', monospace",
+            bio: "'JetBrains Mono', monospace",
+            buttons: "'JetBrains Mono', monospace"
+        }
+    },
+
+    // Profile 5
+    "profile-5": {
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+        nameImage: "https://media.discordapp.net/attachments/719009150469931069/1384841105555271700/20250618_062513.png",
+        nameText: "Riley Chen",
+        role: "Data Scientist",
+        bio: "Transforming complex data into actionable insights. Passionate about machine learning and AI ethics.",
+        nameBg: {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384841242889412640/20250618_062546.gif",
+            opacity: 0.5
+        },
+        links: [
+            { text: "Kaggle", url: "#", icon: "📊" },
+            { text: "LinkedIn", url: "#", icon: "💼" },
+            { text: "Blog", url: "#", icon: "📰" }
+        ],
+        fonts: {
+            role: "'JetBrains Mono', monospace",
+            bio: "'JetBrains Mono', monospace",
+            buttons: "'JetBrains Mono', monospace"
+        }
+    },
+
+    // Profile 6
+    "profile-6": {
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face",
+        nameImage: "https://media.discordapp.net/attachments/719009150469931069/1384841467079266395/20250618_062637.png",
+        nameText: "Casey Morgan",
+        role: "DevOps Engineer",
+        bio: "Architecting scalable infrastructure and streamlining deployment processes. Cloud computing enthusiast.",
+        nameBg: {
+            image: "https://media.discordapp.net/attachments/719009150469931069/1384841614571188266/20250618_062714.gif",
+            opacity: 0.6
+        },
+        links: [
+            { text: "GitHub", url: "#", icon: "🌐" },
+            { text: "Docker", url: "#", icon: "🐳" },
+            { text: "Tech Blog", url: "#", icon: "💻" }
+        ],
+        fonts: {
+            role: "'JetBrains Mono', monospace",
+            bio: "'JetBrains Mono', monospace",
+            buttons: "'JetBrains Mono', monospace"
+        }
+    }
+};
+
+// Custom Fonts Configuration - Add your custom fonts here
+const CUSTOM_FONTS = [
+    {
+        name: "CyberPunk", 
+        url: "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap",
+        fontFamily: "'Orbitron', sans-serif"
+    },
+    {
+        name: "FuturisticLight",
+        url: "https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400&display=swap",
+        fontFamily: "'Exo 2', sans-serif"
+    }
+];
+
+        // ============ END CONFIGURATION SECTION ============
+
+        // Set First Profile Name Background
+        function setProfileNameBackground() {
+            const profileNameContainer = document.getElementById('profile-1-name-container');
+            
+            if (PROFILE_NAME_BG_CONFIG.image && PROFILE_NAME_BG_CONFIG.image.trim() !== "") {
+                // Create the background image element
+                const backgroundImg = document.createElement('img');
+                backgroundImg.src = PROFILE_NAME_BG_CONFIG.image;
+                backgroundImg.className = 'profile-name-bg';
+                backgroundImg.style.opacity = PROFILE_NAME_BG_CONFIG.opacity;
+                
+                // Insert at the beginning of the container
+                profileNameContainer.insertBefore(backgroundImg, profileNameContainer.firstChild);
+            }
+        }
+
+        // Click Sound Setup
+        let soundEnabled = CLICK_SOUND_CONFIG.enabled;
+        let lastSoundTime = 0;
+        const clickSound = document.getElementById('click-sound');
+        const soundToggle = document.getElementById('sound-toggle');
+
+        function setupClickSound() {
+            // Set the sound source and volume
+            clickSound.src = CLICK_SOUND_CONFIG.soundURL;
+            clickSound.volume = CLICK_SOUND_CONFIG.volume;
+            
+            // Update the toggle button
+            updateSoundToggleButton();
+            
+            // Add click event listener to the entire document
+            document.addEventListener('click', playClickSound);
+            
+            // Add toggle button functionality
+            soundToggle.addEventListener('click', function(e) {
+                // Prevent this click from triggering the document click handler
+                e.stopPropagation();
+                
+                // Toggle sound state
+                soundEnabled = !soundEnabled;
+                updateSoundToggleButton();
+            });
+        }
+        
+        function updateSoundToggleButton() {
+            soundToggle.textContent = soundEnabled ? '🔊' : '🔈';
+            soundToggle.title = soundEnabled ? 'Disable click sounds' : 'Enable click sounds';
+        }
+        
+        function playClickSound(e) {
+            // Don't play sound if disabled
+            if (!soundEnabled) return;
+            
+            // Throttle sound to prevent spam
+            const now = Date.now();
+            if (now - lastSoundTime < CLICK_SOUND_CONFIG.throttleMS) return;
+            lastSoundTime = now;
+            
+            // Play the sound
+            clickSound.currentTime = 0; // Reset to start
+            clickSound.play().catch(error => {
+                console.log('Sound playback error:', error);
+            });
+        }
+
+        // Set Favicon
+        function setFavicon() {
+            if (FAVICON_CONFIG.image && FAVICON_CONFIG.image.trim() !== "") {
+                const favicon = document.createElement('link');
+                favicon.rel = 'shortcut icon';
+                favicon.href = FAVICON_CONFIG.image;
+                document.head.appendChild(favicon);
+            }
+        }
+        
+        // Set Site Title Image
+        function setSiteTitleImage() {
+            const siteTitleElement = document.getElementById('site-title');
+            
+            if (SITE_TITLE_CONFIG.image && SITE_TITLE_CONFIG.image.trim() !== "") {
+                // Create image element
+                const titleImage = document.createElement('img');
+                titleImage.src = SITE_TITLE_CONFIG.image;
+                titleImage.alt = SITE_TITLE_CONFIG.altText;
+                titleImage.className = 'site-title-img';
+                
+                // Replace the h1 with the image
+                siteTitleElement.parentNode.replaceChild(titleImage, siteTitleElement);
+                
+                // Also update the page title
+                document.title = SITE_TITLE_CONFIG.altText;
+            }
+        }
+        
+        // Set First Profile Name Image
+        function setProfileNameImage() {
+            const profileNameElement = document.getElementById('profile-1-name');
+            
+            if (PROFILE_NAME_CONFIG.image && PROFILE_NAME_CONFIG.image.trim() !== "") {
+                // Create image element
+                const nameImage = document.createElement('img');
+                nameImage.src = PROFILE_NAME_CONFIG.image;
+                nameImage.alt = PROFILE_NAME_CONFIG.altText;
+                nameImage.className = 'profile-name-img';
+                
+                // Replace the h2 with the image
+                profileNameElement.parentNode.replaceChild(nameImage, profileNameElement);
+            }
+        }
+
+        // Custom Cursor Setup
+        const cursor = document.querySelector('.cursor');
+        const trails = [];
+
+        // Create cursor trails with configurable count
+        for (let i = 0; i < TRAIL_CONFIG.count; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            document.body.appendChild(trail);
+            trails.push(trail);
+        }
+
+        // Set cursor style
+        function setCursor() {
+            if (CURSOR_CONFIG.image && CURSOR_CONFIG.image.trim() !== "") {
+                cursor.style.backgroundImage = `url(${CURSOR_CONFIG.image})`;
+                cursor.style.backgroundColor = 'transparent';
+            } else {
+                cursor.style.backgroundImage = 'none';
+                cursor.style.backgroundColor = CURSOR_CONFIG.color;
+            }
+            cursor.style.width = CURSOR_CONFIG.size + 'px';
+            cursor.style.height = CURSOR_CONFIG.size + 'px';
+        }
+
+        // Set trail style
+        function setTrails() {
+            trails.forEach(trail => {
+                if (TRAIL_CONFIG.image && TRAIL_CONFIG.image.trim() !== "") {
+                    trail.style.backgroundImage = `url(${TRAIL_CONFIG.image})`;
+                    trail.style.backgroundColor = 'transparent';
+                    trail.style.clipPath = 'none'; // Remove heart shape when using image
+                } else {
+                    trail.style.backgroundImage = 'none';
+                    trail.style.backgroundColor = TRAIL_CONFIG.color;
+                    trail.style.clipPath = 'polygon(50% 85%, 20% 40%, 50% 15%, 80% 40%)'; // Heart shape for default
+                }
+                trail.style.width = TRAIL_CONFIG.size + 'px';
+                trail.style.height = TRAIL_CONFIG.size + 'px';
+            });
+        }
+
+        // Cursor movement
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - (CURSOR_CONFIG.size / 2) + 'px';
+            cursor.style.top = e.clientY - (CURSOR_CONFIG.size / 2) + 'px';
+
+            // Animate trails
+            trails.forEach((trail, index) => {
+                setTimeout(() => {
+                    trail.style.left = e.clientX - (TRAIL_CONFIG.size / 2) + 'px';
+                    trail.style.top = e.clientY - (TRAIL_CONFIG.size / 2) + 'px';
+                    trail.style.opacity = (TRAIL_CONFIG.count - index) / (TRAIL_CONFIG.count + 5);
+                }, index * 50);
+            });
+        });
+
+        // Set Profile Images
+        function setProfileImages() {
+            Object.keys(PROFILE_IMAGES).forEach(profileId => {
+                const element = document.getElementById(profileId);
+                if (element && PROFILE_IMAGES[profileId]) {
+                    element.style.backgroundImage = `url(${PROFILE_IMAGES[profileId]})`;
+                }
+            });
+        }
+
+        // Music Player
+        let currentTrack = 0;
+        let isPlaying = false;
+        let volume = 50;
+
+        const trackTitle = document.getElementById('track-title');
+        const trackArtist = document.getElementById('track-artist');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeFill = document.getElementById('volume-fill');
+        const volumePercent = document.getElementById('volume-percent');
+        const audioPlayer = document.getElementById('audio-player');
+        const albumArt = document.querySelector('.album-art');
+
+        function updateTrackInfo() {
+            const track = MUSIC_TRACKS[currentTrack];
+            trackTitle.textContent = track.title;
+            trackArtist.textContent = track.artist;
+            
+            if (track.thumbnail) {
+                albumArt.style.backgroundImage = `url(${track.thumbnail})`;
+                albumArt.textContent = '';
+            } else {
+                albumArt.style.backgroundImage = 'none';
+                albumArt.textContent = '♪';
+            }
+            
+            if (track.file) {
+                audioPlayer.src = track.file;
+            }
+          updateVideoBackgroundForSong(track); // <--- ADD THIS
+        }
+
+        function updateVolumeDisplay() {
+            volumeFill.style.width = volume + '%';
+            volumePercent.textContent = Math.round(volume) + '%';
+        }
+
+function playAudio() {
+    const video = document.getElementById('bg-video');
+    if (MUSIC_TRACKS[currentTrack].file) {
+        audioPlayer.play().catch(e => console.log('Playbook failed:', e));
+        // Sync video playback with audio
+        if (video.src) {
+            video.play().catch(e => console.log('Video play failed:', e));
+        }
+    }
+}
+
+function pauseAudio() {
+    const video = document.getElementById('bg-video');
+    audioPlayer.pause();
+    // Sync video pause with audio
+    if (video.src) {
+        video.pause();
+    }
+}
+function updateVideoBackgroundForSong(songObj) {
+    const video = document.getElementById('bg-video');
+    let url = songObj && songObj.videoBg ? songObj.videoBg : (DEFAULT_BG_VIDEO || "");
+    if (url) {
+        if (video.src !== url) video.src = url;
+        video.style.display = "";
+        // Only auto-play video if music is currently playing
+        if (isPlaying) {
+            video.play().catch(()=>{});
+        }
+        document.body.classList.add('has-bgvideo');
+    } else {
+        video.pause();
+        video.style.display = "none";
+        video.src = "";
+        document.body.classList.remove('has-bgvideo');
+    }
+}
+function initializePaused() {
+    if (AUTO_PAUSE_CONFIG.enabled) {
+        const video = document.getElementById('bg-video');
+        
+        // Set default volume
+        volume = AUTO_PAUSE_CONFIG.defaultVolume;
+        volumeSlider.value = volume;
+        audioPlayer.volume = volume / 100;
+        updateVolumeDisplay();
+        
+        // Ensure everything is paused
+        isPlaying = false;
+        playBtn.textContent = '▶';
+        playBtn.style.transform = 'scale(1)';
+        
+        // Pause audio and video
+        audioPlayer.pause();
+        if (video.src) {
+            video.pause();
+        }
+    }
+}
+        // Music player controls
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playBtn.textContent = isPlaying ? '⏸' : '▶';
+            playBtn.style.transform = isPlaying ? 'scale(1.1)' : 'scale(1)';
+            
+            if (isPlaying) {
+                playAudio();
+            } else {
+                pauseAudio();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
+            updateTrackInfo();
+            if (isPlaying) {
+                playAudio();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+            updateTrackInfo();
+            if (isPlaying) {
+                playAudio();
+            }
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            volume = e.target.value;
+            audioPlayer.volume = volume / 100;
+            updateVolumeDisplay();
+        });
+
+        // Audio player events
+        audioPlayer.addEventListener('ended', () => {
+            currentTrack = (currentTrack + 1) % MUSIC_TRACKS.length;
+            updateTrackInfo();
+            if (isPlaying) {
+                playAudio();
+            }
+        });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            audioPlayer.volume = volume / 100;
+            updateVolumeDisplay();
+        });
+
+        // Hover effects
+        document.querySelectorAll('.profile-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+        });
+
+        document.querySelectorAll('button, a').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursor.style.opacity = '0.8';
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.opacity = '1';
+            });
+        });
+/*** -----------------
+    Hover SFX set-up
+------------------ ***/
+let hoverSound = null;
+function setupPortfolioHoverSound() {
+    hoverSound = new Audio(HOVER_SOUND_CONFIG.soundURL);
+    hoverSound.volume = HOVER_SOUND_CONFIG.volume;
+    document.querySelectorAll('.profile-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            try {
+                hoverSound.currentTime = 0;
+                hoverSound.play();
+            } catch(e){}
+        });
+    });
+}
+/*** -----------------
+    Play/Skip Glow
+------------------ ***/
+function setupPlayerGlow() {
+    const addGlowHandler = btn => {
+        btn.addEventListener('mouseenter', () => btn.classList.add('glow'));
+        btn.addEventListener('mouseleave', () => btn.classList.remove('glow'));
+    };
+    ['play-btn', 'prev-btn', 'next-btn'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) addGlowHandler(btn);
+    });
+}
+/*** -----------------
+    First portfolio title zoom
+------------------ ***/
+function setupProfileZoom() {
+    // Try image, fallback to .profile-name (text)
+    let el = document.querySelector('#profile-1-name-container img.profile-name-img');
+    if (!el) el = document.querySelector('#profile-1-name-container .profile-name');
+    if (!el) return;
+
+    el.addEventListener('mouseenter', () => el.classList.add('zoom'));
+    el.addEventListener('mouseleave', () => el.classList.remove('zoom'));
+}
+
+/*** -----------------
+    Global click ring animation
+------------------ ***/
+function setupClickRing() {
+    let ringStage = document.getElementById('click-ring-effect');
+    if (!ringStage) {
+        ringStage = document.createElement('div');
+        ringStage.id = 'click-ring-effect';
+        document.body.appendChild(ringStage);
+    }
+    document.addEventListener('click', ev => {
+        // Don't show ring if clicking on the custom sound toggle!
+        if (ev.target.closest('#sound-toggle')) return;
+        // Avoid click-sound? Nah, let it ring
+        const ring = document.createElement('div');
+        ring.className = 'ring';
+        ring.style.left = ev.clientX + 'px';
+        ring.style.top  = ev.clientY + 'px';
+        ring.style.background = CLICK_RING_CONFIG.color;
+        ring.style.setProperty('--ring-radius', CLICK_RING_CONFIG.finalRadius + 'px');
+        ring.style.setProperty('--ring-duration', (CLICK_RING_CONFIG.duration/1000)+'s');
+        ringStage.appendChild(ring);
+        setTimeout(() => {
+            ring.remove();
+        }, CLICK_RING_CONFIG.duration + 100);
+    });
+}
+// Function to dynamically build profile cards
+function buildProfileCards() {
+    const profilesGrid = document.querySelector('.profiles-grid');
+    profilesGrid.innerHTML = ''; // Clear existing content
+
+    // For each profile in the configuration
+    Object.keys(PROFILES_CONFIG).forEach(profileId => {
+        const profile = PROFILES_CONFIG[profileId];
+        const profileNumber = profileId.split('-')[1]; // Extract the number from the ID
+
+        // Create profile card
+        const card = document.createElement('div');
+        card.className = 'profile-card';
+        card.id = `profile-card-${profileNumber}`;
+
+        // Create and add avatar container
+        const avatarContainer = document.createElement('div');
+        avatarContainer.className = 'avatar-container';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'profile-avatar';
+        avatar.id = profileId;
+        avatar.style.backgroundImage = `url(${profile.avatar})`;
+        avatarContainer.appendChild(avatar);
+
+        // Add avatar decoration if configured
+        if (profile.avatarDecoration && profile.avatarDecoration.image) {
+            const decoration = document.createElement('img');
+            decoration.src = profile.avatarDecoration.image;
+            decoration.className = 'avatar-decoration';
+
+            // Apply sizing and positioning
+            const size = profile.avatarDecoration.size || 70;
+            const offsetX = profile.avatarDecoration.offsetX || 0;
+            const offsetY = profile.avatarDecoration.offsetY || 0;
+
+            decoration.style.width = `${size}%`;
+            decoration.style.position = 'absolute';
+
+            // Calculating exact pixel offsets to avoid percentage positioning issues
+            decoration.style.left = `calc(${(50 + offsetX)}% - ${size / 2}% )`;
+            decoration.style.top = `calc(${(50 + offsetY)}% - ${size / 2}% )`;
+
+            avatarContainer.appendChild(decoration);
+        }
+
+        card.appendChild(avatarContainer);
+
+        // ... rest of the function for name, role, bio, links, etc. ...
+
+        profilesGrid.appendChild(card);
+    });
+
+    // Add hover events for enhanced interactivity
+    setupProfileHoverEffects();
+}
+
+// Function to import custom fonts
+function importCustomFonts() {
+    CUSTOM_FONTS.forEach(font => {
+        if (!document.getElementById(`font-${font.name}`)) {
+            const fontLink = document.createElement('link');
+            fontLink.id = `font-${font.name}`;
+            fontLink.rel = 'stylesheet';
+            fontLink.href = font.url;
+            document.head.appendChild(fontLink);
+        }
+    });
+}
+
+// Setup the hover effects for all profiles
+function setupProfileHoverEffects() {
+    document.querySelectorAll('.profile-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+            if (hoverSound && soundEnabled) {
+                hoverSound.currentTime = 0;
+                hoverSound.play().catch(e => console.log('Hover sound failed:', e));
+            }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+        });
+    });
+}
+
+// Replace setupProfileZoom function with an empty function since we now handle it in buildProfileCards
+function setupProfileZoom() {
+    // This is now handled during card creation for all profiles
+}
+        // Initialize everything
+        window.addEventListener('DOMContentLoaded', () => {
+    setFavicon();
+    setSiteTitleImage();
+    setCursor();
+    setTrails();
+    buildProfileCards(); // This replaces setProfileImages
+    updateTrackInfo();
+    updateVolumeDisplay();
+    setupClickSound();
+    setupPortfolioHoverSound();
+    setupPlayerGlow();
+    setupClickRing();
+    initializePaused();
+        });
+    </script>
+</body>
+</html>
