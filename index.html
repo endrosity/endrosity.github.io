@@ -1079,7 +1079,7 @@ const VOLUME_SLIDER_CONFIG = {
                 duration: 700 // ms
             };
     
-            // Profile Configuration (Now with button icon images!)
+            // Profile Configuration (Now with individual decorations!)
 const PROFILES_CONFIG = [
     {
         avatar: "https://files.catbox.moe/dufd34.png",
@@ -1087,6 +1087,11 @@ const PROFILES_CONFIG = [
         nameText: "Alex Chen", // Fallback if image can't load
         role: "Frontend Developer",
         bio: "Creating beautiful interfaces with a passion for user experience. Loves dark themes and synthwave music.",
+        // Individual decoration for this profile
+        decoration: {
+            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
+            enabled: true
+        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1118,6 +1123,11 @@ const PROFILES_CONFIG = [
         nameText: "Jamie Wilson",
         role: "Backend Developer",
         bio: "Building robust server solutions and APIs. Passionate about performance optimization and clean code.",
+        // Different decoration for this profile
+        decoration: {
+            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png", // You can use a different image here
+            enabled: true
+        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1149,6 +1159,10 @@ const PROFILES_CONFIG = [
         nameText: "Taylor Smith",
         role: "UI/UX Designer",
         bio: "Creating intuitive user experiences with a focus on aesthetic appeal and usability. Always exploring new design trends.",
+        // No decoration for this profile
+        decoration: {
+            enabled: false
+        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1180,6 +1194,11 @@ const PROFILES_CONFIG = [
         nameText: "Jordan Lee",
         role: "DevOps Engineer",
         bio: "Automating deployment processes and maintaining cloud infrastructure. Loves containers and continuous integration.",
+        // Custom decoration for this profile
+        decoration: {
+            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
+            enabled: true
+        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1211,6 +1230,11 @@ const PROFILES_CONFIG = [
         nameText: "Riley Morgan",
         role: "3D Artist",
         bio: "Creating immersive 3D worlds and characters. Specializes in realistic texturing and environmental design.",
+        // Custom decoration for this profile
+        decoration: {
+            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png",
+            enabled: true
+        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1242,6 +1266,11 @@ const PROFILES_CONFIG = [
         nameText: "Casey Johnson",
         role: "Community Manager",
         bio: "Building and nurturing online communities. Expert in social media strategies and user engagement techniques.",
+        // Different decoration for this profile
+        decoration: {
+            image: "https://cdn-1.files.vc/files/mwb/8be2b49b110041bfb5771bcdb643da8d.png", 
+            enabled: true
+        },
         nameBg: {
             image: "https://images-ext-1.discordapp.net/external/47Cu99ZQB6TSaSWq4W4TbcInEfg1GwTDqXrPbAiFPWY/https/files.catbox.moe/wnlb30.gif",
             opacity: 0.7
@@ -1451,10 +1480,26 @@ const FONT_CONFIG = {
                     avatar.style.backgroundImage = `url(${config.avatar})`;
                 }
                 
-                // Update avatar decoration
-                if (decoration && AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+                // Update avatar decoration - UPDATED FOR INDIVIDUAL DECORATIONS
+                if (decoration) {
                     decoration.id = `avatar-decoration-${index}`;
-                    decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+                    
+                    // Check if this profile has decoration config and if it's enabled
+                    if (config.decoration && config.decoration.enabled && config.decoration.image) {
+                        // Use this profile's specific decoration
+                        decoration.style.backgroundImage = `url(${config.decoration.image})`;
+                        decoration.style.display = 'block';
+                    } else if (config.decoration && !config.decoration.enabled) {
+                        // Decoration is explicitly disabled for this profile
+                        decoration.style.display = 'none';
+                    } else if (AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+                        // Fall back to global decoration if profile doesn't specify one
+                        decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+                        decoration.style.display = 'block';
+                    } else {
+                        // No decoration for this profile
+                        decoration.style.display = 'none';
+                    }
                 }
                 
                 // Update name container
@@ -1635,18 +1680,31 @@ const FONT_CONFIG = {
     
             // Set Profile Content
             function setProfileContent() {
-                // Set avatar image
+                //                // Set avatar image
                 const avatarElement = document.getElementById('profile');
                 if (avatarElement && PROFILES_CONFIG[0].avatar) {
                     avatarElement.style.backgroundImage = `url(${PROFILES_CONFIG[0].avatar})`;
                 }
                 
-                // Set avatar decoration
+                // Set avatar decoration - UPDATED FOR INDIVIDUAL DECORATIONS
                 const decorationElement = document.getElementById('avatar-decoration');
-                if (decorationElement && AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
-                    decorationElement.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
-                } else if (decorationElement) {
-                    decorationElement.style.display = 'none';
+                if (decorationElement) {
+                    // Check if this profile has decoration config and if it's enabled
+                    if (PROFILES_CONFIG[0].decoration && PROFILES_CONFIG[0].decoration.enabled && PROFILES_CONFIG[0].decoration.image) {
+                        // Use this profile's specific decoration
+                        decorationElement.style.backgroundImage = `url(${PROFILES_CONFIG[0].decoration.image})`;
+                        decorationElement.style.display = 'block';
+                    } else if (PROFILES_CONFIG[0].decoration && !PROFILES_CONFIG[0].decoration.enabled) {
+                        // Decoration is explicitly disabled for this profile
+                        decorationElement.style.display = 'none';
+                    } else if (AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+                        // Fall back to global decoration
+                        decorationElement.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+                        decorationElement.style.display = 'block';
+                    } else {
+                        // No decoration
+                        decorationElement.style.display = 'none';
+                    }
                 }
                 
                 // Set role text
@@ -1661,6 +1719,7 @@ const FONT_CONFIG = {
                     bioElement.textContent = PROFILES_CONFIG[0].bio;
                 }
             }
+
 // New function for the subtitle images
 function setSubtitleImages() {
   // Find the header
@@ -2475,7 +2534,3 @@ window.addEventListener('DOMContentLoaded', () => {
     improveVideoSync();
     adjustSpacing();
 });
-        </script>
-</body>
-
-</html>
