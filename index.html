@@ -404,22 +404,23 @@
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
         }
     /* Click to Enter Overlay */
-#enter-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    cursor: pointer !important;
-    transition: opacity 1s ease-out;
-}
+ #enter-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        cursor: pointer !important;
+        transition: opacity 1s ease-out;
+        user-select: none;
+    }
     
     #enter-text {
         color: #ffffff;
@@ -430,11 +431,13 @@
         -webkit-text-fill-color: transparent;
         margin-bottom: 1rem;
         text-shadow: 0 0 5px rgba(255,255,255,0.2);
+        pointer-events: none;
     }
     
     #enter-subtext {
         color: rgba(255,255,255,0.7);
         font-size: 1rem;
+        pointer-events: none;
     }
     
     @media (max-width: 768px) {
@@ -841,6 +844,28 @@
     <div id="enter-text">Click to Enter</div>
     <div id="enter-subtext">Turn on sound for best experience</div>
 </div>
+<script>
+    // Direct function to enter the site
+    function enterSite() {
+        const overlay = document.getElementById('enter-overlay');
+        if (!overlay) return;
+        
+        overlay.style.opacity = '0';
+        
+        // Try to play music
+        if (typeof randomizeAndPlayMusic === 'function') {
+            randomizeAndPlayMusic();
+        }
+        
+        setTimeout(() => {
+            overlay.remove();
+            const container = document.querySelector('.container');
+            if (container) {
+                container.classList.remove('blur-in');
+            }
+        }, 1000);
+    }
+</script>
     <noscript>
             <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; font-size: 1.5em;">
                 Please enable JavaScript to continue, you fat retard. Kill yourself.
@@ -1365,14 +1390,72 @@ const FONT_CONFIG = {
             // ============ END CONFIGURATION SECTION ============
     
             // New function to setup multiple profile cards from template
-        function setupMultipleProfiles() {
+   function setupMultipleProfiles() {
     // First, check if we already have multiple profiles set up
     if (document.querySelector('.profile-cards-container')) {
         return; // Already set up
     }
     
-    console.log("Setting up multiple profiles"); // Debug log
+    console.log("Setting up multiple profiles");
     
+    // Find the existing single profile card
+    const existingCard = document.querySelector('.profile-card');
+    if (!existingCard) {
+        console.log("No existing profile card found");
+        return;
+    }
+    
+    // Create a container for all profile cards
+    const profileCardsContainer = document.createElement('div');
+    profileCardsContainer.className = 'profile-cards-container';
+    
+    // Clone the existing card as a template
+    const cardTemplate = existingCard.cloneNode(true);
+    
+    // Remove the original card
+    const parent = existingCard.parentNode;
+    parent.removeChild(existingCard);
+    
+    // Add the container to the parent
+    parent.appendChild(profileCardsContainer);
+    
+    // Get the number of profiles to create
+    const numProfiles = Math.min(PROFILES_CONFIG.length, 6); // Limit to 6 or available configs
+    console.log(`Creating ${numProfiles} profile cards`);
+    
+    // Create the cards based on available configs
+    for (let i = 0; i < numProfiles; i++) {
+        // Clone the template for each card
+        const newCard = cardTemplate.cloneNode(true);
+        const profileIndex = i + 1;
+        
+        // Update card ID
+        newCard.id = `profile-card-${profileIndex}`;
+        
+        // Update element IDs inside the card
+        const elements = newCard.querySelectorAll('[id]');
+        elements.forEach(element => {
+            // Replace any existing IDs with indexed versions
+            if (element.id.includes('profile')) {
+                const baseName = element.id.split('-')[0];
+                element.id = `${baseName}-${profileIndex}`;
+            } else if (element.id.includes('avatar')) {
+                element.id = `avatar-decoration-${profileIndex}`;
+            } else {
+                // For other elements like role, bio, etc.
+                const parts = element.id.split('-');
+                if (parts.length >= 2) {
+                    element.id = `${parts[0]}-${parts[1]}-${profileIndex}`;
+                }
+            }
+        });
+        
+        // Add to container
+        profileCardsContainer.appendChild(newCard);
+    }
+    
+    console.log("Multiple profiles setup complete");
+}
     // Add CSS for the grid layout
     const style = document.createElement('style');
     style.textContent = `
@@ -1794,29 +1877,37 @@ function setupEnterOverlay() {
     const overlay = document.getElementById('enter-overlay');
     if (!overlay) return;
     
-    // Make sure the overlay is clickable - add this line
-    overlay.style.cursor = 'pointer';
+    // First, make sure we've set up all profiles before the overlay is shown
+    setupAllProfiles();
     
-    overlay.addEventListener('click', function() {
+    // Make the overlay clickable
+    overlay.addEventListener('click', () => {
         // Fade out overlay
-        this.style.opacity = '0';
+        overlay.style.opacity = '0';
         
         // Start music automatically with random track
         randomizeAndPlayMusic();
         
-        // Remove overlay after animation completes and show profiles
+        // Remove overlay after animation completes
         setTimeout(() => {
-            this.remove();
+            overlay.remove();
             
             // Remove blur from main content
             document.querySelector('.container').classList.remove('blur-in');
-            
-            // Make sure all profiles are visible
-            setupAllProfiles();
+        }, 1000);
+    });
+    
+    // Fallback in case click event doesn't work - add touchstart for mobile
+    overlay.addEventListener('touchstart', () => {
+        overlay.style.opacity = '0';
+        randomizeAndPlayMusic();
+        
+        setTimeout(() => {
+            overlay.remove();
+            document.querySelector('.container').classList.remove('blur-in');
         }, 1000);
     });
 }
-
 
 // Randomize and play music
 function randomizeAndPlayMusic() {
