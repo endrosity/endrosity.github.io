@@ -404,22 +404,22 @@
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
         }
     /* Click to Enter Overlay */
-    #enter-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(10px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        cursor: pointer;
-        transition: opacity 1s ease-out;
-    }
+#enter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    cursor: pointer !important;
+    transition: opacity 1s ease-out;
+}
     
     #enter-text {
         color: #ffffff;
@@ -1365,86 +1365,101 @@ const FONT_CONFIG = {
             // ============ END CONFIGURATION SECTION ============
     
             // New function to setup multiple profile cards from template
-            function setupMultipleProfiles() {
-                // First, check if we already have multiple profiles set up
-                if (document.querySelector('.profile-cards-container')) {
-                    return; // Already set up
+        function setupMultipleProfiles() {
+    // First, check if we already have multiple profiles set up
+    if (document.querySelector('.profile-cards-container')) {
+        return; // Already set up
+    }
+    
+    console.log("Setting up multiple profiles"); // Debug log
+    
+    // Add CSS for the grid layout
+    const style = document.createElement('style');
+    style.textContent = `
+        .profile-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-cards-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            
+            .profile-card {
+                max-width: 90%;
+                margin: 0 auto;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Find the existing single profile card
+    const existingCard = document.querySelector('.profile-card');
+    if (!existingCard) {
+        console.error("No existing profile card found!");
+        return;
+    }
+    
+    // Create a container for all profile cards
+    const profileCardsContainer = document.createElement('div');
+    profileCardsContainer.className = 'profile-cards-container';
+    
+    // Clone the existing card as a template
+    const cardTemplate = existingCard.cloneNode(true);
+    
+    // Remove the original card
+    const parent = existingCard.parentNode;
+    parent.removeChild(existingCard);
+    
+    // Add the container to the parent
+    parent.appendChild(profileCardsContainer);
+    
+    // Create cards for each profile in PROFILES_CONFIG
+    for (let i = 0; i < PROFILES_CONFIG.length; i++) {
+        // Clone the template for each card
+        const newCard = cardTemplate.cloneNode(true);
+        
+        // Update IDs
+        newCard.id = `profile-card-${i+1}`;
+        
+        // Update element IDs inside the card
+        const elements = newCard.querySelectorAll('[id]');
+        elements.forEach(element => {
+            // Replace any existing IDs with indexed versions
+            if (element.id.includes('profile')) {
+                if (element.id === 'profile-name-container') {
+                    element.id = `profile-${i+1}-name-container`;
+                } else {
+                    const baseName = element.id.split('-')[0];
+                    element.id = `${baseName}-${i+1}`;
                 }
-                
-                // Add CSS for the grid layout
-                const style = document.createElement('style');
-                style.textContent = `
-                    .profile-cards-container {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-                        gap: 2rem;
-                        width: 100%;
-                        max-width: 1200px;
-                        margin: 0 auto;
-                    }
-                    
-                    @media (max-width: 768px) {
-                        .profile-cards-container {
-                            grid-template-columns: 1fr;
-                            gap: 2.5rem;
-                        }
-                        
-                        .profile-card {
-                            max-width: 90%;
-                            margin: 0 auto;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                // Find the existing single profile card
-                const existingCard = document.querySelector('.profile-card');
-                if (!existingCard) return;
-                
-                // Create a container for all profile cards
-                const profileCardsContainer = document.createElement('div');
-                profileCardsContainer.className = 'profile-cards-container';
-                
-                // Clone the existing card as a template
-                const cardTemplate = existingCard.cloneNode(true);
-                
-                // Remove the original card
-                const parent = existingCard.parentNode;
-                parent.removeChild(existingCard);
-                
-                // Add the container to the parent
-                parent.appendChild(profileCardsContainer);
-                
-                // Create 6 cards
-                for (let i = 1; i <= 6; i++) {
-                    // Clone the template for each card
-                    const newCard = cardTemplate.cloneNode(true);
-                    
-                    // Update IDs
-                    newCard.id = `profile-card-${i}`;
-                    
-                    // Update element IDs inside the card
-                    const elements = newCard.querySelectorAll('[id]');
-                    elements.forEach(element => {
-                        // Replace any existing IDs with indexed versions
-                        if (element.id.includes('profile')) {
-                            const baseName = element.id.split('-')[0];
-                            element.id = `${baseName}-${i}`;
-                        } else if (element.id.includes('avatar')) {
-                            element.id = `avatar-decoration-${i}`;
-                        } else {
-                            // For other elements like role, bio, etc.
-                            const parts = element.id.split('-');
-                            if (parts.length >= 2) {
-                                element.id = `${parts[0]}-${parts[1]}-${i}`;
-                            }
-                        }
-                    });
-                    
-                    // Add to container
-                    profileCardsContainer.appendChild(newCard);
+            } else if (element.id.includes('avatar')) {
+                element.id = `avatar-decoration-${i+1}`;
+            } else {
+                // For other elements like role, bio, etc.
+                const parts = element.id.split('-');
+                if (parts.length >= 2) {
+                    element.id = `${parts[0]}-${parts[1]}-${i+1}`;
                 }
             }
+        });
+        
+        // Add to container
+        profileCardsContainer.appendChild(newCard);
+        
+        // Immediately update with the profile data
+        updateProfile(i+1);
+    }
+    
+    console.log(`Created ${PROFILES_CONFIG.length} profile cards`); // Debug log
+}
+
 
             // New function to update all profiles
             function setupAllProfiles() {
@@ -1459,136 +1474,143 @@ const FONT_CONFIG = {
             }
 
             // Function to update an individual profile
-            function updateProfile(index) {
-                const config = PROFILES_CONFIG[index - 1];
-                if (!config) return;
+  function updateProfile(index) {
+    const config = PROFILES_CONFIG[index - 1];
+    if (!config) {
+        console.error(`No profile config found for index ${index}`);
+        return;
+    }
+    
+    // Get elements
+    const card = document.getElementById(`profile-card-${index}`);
+    if (!card) {
+        console.error(`No profile card found with ID profile-card-${index}`);
+        return;
+    }
+    
+    const avatar = card.querySelector(`.profile-avatar`);
+    const decoration = card.querySelector(`.avatar-decoration`);
+    const nameContainer = card.querySelector(`.profile-name-container`);
+    const role = card.querySelector(`.profile-role`);
+    const bio = card.querySelector(`.profile-bio`);
+    const links = card.querySelector(`.profile-links`);
+    
+    // Update avatar
+    if (avatar && config.avatar) {
+        avatar.id = `profile-${index}`;
+        avatar.style.backgroundImage = `url(${config.avatar})`;
+    }
+    
+    // Update avatar decoration
+    if (decoration) {
+        decoration.id = `avatar-decoration-${index}`;
+        
+        // Check if this profile has decoration config and if it's enabled
+        if (config.decoration && config.decoration.enabled && config.decoration.image) {
+            // Use this profile's specific decoration
+            decoration.style.backgroundImage = `url(${config.decoration.image})`;
+            decoration.style.display = 'block';
+        } else if (config.decoration && !config.decoration.enabled) {
+            // Decoration is explicitly disabled for this profile
+            decoration.style.display = 'none';
+        } else if (AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
+            // Fall back to global decoration if profile doesn't specify one
+            decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
+            decoration.style.display = 'block';
+        } else {
+            // No decoration for this profile
+            decoration.style.display = 'none';
+        }
+    }
+    
+    // Update name container
+    if (nameContainer) {
+        nameContainer.id = `profile-${index}-name-container`;
+        nameContainer.innerHTML = ''; // Clear existing content
+        
+        // Add name background if configured
+        if (config.nameBg && config.nameBg.image) {
+            const bgImg = document.createElement('img');
+            bgImg.src = config.nameBg.image;
+            bgImg.className = 'profile-name-bg';
+            bgImg.style.opacity = config.nameBg.opacity || 0.7;
+            nameContainer.appendChild(bgImg);
+        }
+        
+        // Add name (image or text)
+        if (config.nameImage) {
+            const nameImg = document.createElement('img');
+            nameImg.src = config.nameImage;
+            nameImg.alt = config.nameText || '';
+            nameImg.className = 'profile-name-img';
+            
+            // Add zoom effect
+            nameImg.addEventListener('mouseenter', () => nameImg.classList.add('zoom'));
+            nameImg.addEventListener('mouseleave', () => nameImg.classList.remove('zoom'));
+            
+            nameContainer.appendChild(nameImg);
+        } else if (config.nameText) {
+            const nameText = document.createElement('h2');
+            nameText.className = 'profile-name';
+            nameText.textContent = config.nameText;
+            
+            // Add zoom effect
+            nameText.addEventListener('mouseenter', () => nameText.classList.add('zoom'));
+            nameText.addEventListener('mouseleave', () => nameText.classList.remove('zoom'));
+            
+            nameContainer.appendChild(nameText);
+        }
+    }
+    
+    // Update role
+    if (role) {
+        role.id = `profile-role-${index}`;
+        role.textContent = config.role || '';
+    }
+    
+    // Update bio
+    if (bio) {
+        bio.id = `profile-bio-${index}`;
+        bio.textContent = config.bio || '';
+    }
+    
+    // Update links
+    if (links) {
+        links.id = `profile-links-${index}`;
+        links.innerHTML = ''; // Clear existing links
+        
+        if (config.links && config.links.length > 0) {
+            config.links.forEach(link => {
+                const linkEl = document.createElement('a');
+                linkEl.href = link.url || '#';
+                linkEl.className = 'profile-link';
+                linkEl.target = "_blank"; // Open in new tab
                 
-                // Get elements
-                const card = document.getElementById(`profile-card-${index}`);
-                if (!card) return;
+                // Create icon
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'link-icon';
                 
-                const avatar = card.querySelector(`.profile-avatar`);
-                const decoration = card.querySelector(`.avatar-decoration`);
-                const nameContainer = card.querySelector(`.profile-name-container`);
-                const role = card.querySelector(`.profile-role`);
-                const bio = card.querySelector(`.profile-bio`);
-                const links = card.querySelector(`.profile-links`);
-                
-                // Update avatar
-                if (avatar && config.avatar) {
-                    avatar.id = `profile-${index}`;
-                    avatar.style.backgroundImage = `url(${config.avatar})`;
+                if (link.iconImage) {
+                    const iconImg = document.createElement('img');
+                    iconImg.src = link.iconImage;
+                    iconImg.alt = link.text || '';
+                    iconSpan.appendChild(iconImg);
+                } else {
+                    iconSpan.textContent = link.icon || '🔗';
                 }
                 
-                // Update avatar decoration - UPDATED FOR INDIVIDUAL DECORATIONS
-                if (decoration) {
-                    decoration.id = `avatar-decoration-${index}`;
-                    
-                    // Check if this profile has decoration config and if it's enabled
-                    if (config.decoration && config.decoration.enabled && config.decoration.image) {
-                        // Use this profile's specific decoration
-                        decoration.style.backgroundImage = `url(${config.decoration.image})`;
-                        decoration.style.display = 'block';
-                    } else if (config.decoration && !config.decoration.enabled) {
-                        // Decoration is explicitly disabled for this profile
-                        decoration.style.display = 'none';
-                    } else if (AVATAR_DECORATION_CONFIG.enabled && AVATAR_DECORATION_CONFIG.image) {
-                        // Fall back to global decoration if profile doesn't specify one
-                        decoration.style.backgroundImage = `url(${AVATAR_DECORATION_CONFIG.image})`;
-                        decoration.style.display = 'block';
-                    } else {
-                        // No decoration for this profile
-                        decoration.style.display = 'none';
-                    }
-                }
+                linkEl.appendChild(iconSpan);
                 
-                // Update name container
-                if (nameContainer) {
-                    nameContainer.id = `profile-${index}-name-container`;
-                    nameContainer.innerHTML = ''; // Clear existing content
-                    
-                    // Add name background if configured
-                    if (config.nameBg && config.nameBg.image) {
-                        const bgImg = document.createElement('img');
-                        bgImg.src = config.nameBg.image;
-                        bgImg.className = 'profile-name-bg';
-                        bgImg.style.opacity = config.nameBg.opacity || 0.7;
-                        nameContainer.appendChild(bgImg);
-                    }
-                    
-                    // Add name (image or text)
-                    if (config.nameImage) {
-                        const nameImg = document.createElement('img');
-                        nameImg.src = config.nameImage;
-                        nameImg.alt = config.nameText || '';
-                        nameImg.className = 'profile-name-img';
-                        
-                        // Add zoom effect
-                        nameImg.addEventListener('mouseenter', () => nameImg.classList.add('zoom'));
-                        nameImg.addEventListener('mouseleave', () => nameImg.classList.remove('zoom'));
-                        
-                        nameContainer.appendChild(nameImg);
-                    } else if (config.nameText) {
-                        const nameText = document.createElement('h2');
-                        nameText.className = 'profile-name';
-                        nameText.textContent = config.nameText;
-                        
-                        // Add zoom effect
-                        nameText.addEventListener('mouseenter', () => nameText.classList.add('zoom'));
-                        nameText.addEventListener('mouseleave', () => nameText.classList.remove('zoom'));
-                        
-                        nameContainer.appendChild(nameText);
-                    }
-                }
+                // Add text
+                const textSpan = document.createElement('span');
+                textSpan.textContent = link.text || 'Link';
+                linkEl.appendChild(textSpan);
                 
-                // Update role
-                if (role) {
-                    role.id = `profile-role-${index}`;
-                    role.textContent = config.role || '';
-                }
-                
-                // Update bio
-                if (bio) {
-                    bio.id = `profile-bio-${index}`;
-                    bio.textContent = config.bio || '';
-                }
-                
-                // Update links
-                if (links) {
-                    links.id = `profile-links-${index}`;
-                    links.innerHTML = ''; // Clear existing links
-                    
-                    if (config.links && config.links.length > 0) {
-                        config.links.forEach(link => {
-                            const linkEl = document.createElement('a');
-                            linkEl.href = link.url || '#';
-                            linkEl.className = 'profile-link';
-                            
-                            // Create icon
-                            const iconSpan = document.createElement('span');
-                            iconSpan.className = 'link-icon';
-                            
-                            if (link.iconImage) {
-                                const iconImg = document.createElement('img');
-                                iconImg.src = link.iconImage;
-                                iconImg.alt = link.text || '';
-                                iconSpan.appendChild(iconImg);
-                            } else {
-                                iconSpan.textContent = link.icon || '🔗';
-                            }
-                            
-                            linkEl.appendChild(iconSpan);
-                            
-                            // Add text
-                            const textSpan = document.createElement('span');
-                            textSpan.textContent = link.text || 'Link';
-                            linkEl.appendChild(textSpan);
-                            
-                            links.appendChild(linkEl);
-                        });
-                    }
-                }
-            }
+                links.appendChild(linkEl);
+            });
+        }
+    }
+}
 
             // Set Profile Name Background
             function setProfileNameBackground() {
@@ -1772,22 +1794,29 @@ function setupEnterOverlay() {
     const overlay = document.getElementById('enter-overlay');
     if (!overlay) return;
     
-    overlay.addEventListener('click', () => {
+    // Make sure the overlay is clickable - add this line
+    overlay.style.cursor = 'pointer';
+    
+    overlay.addEventListener('click', function() {
         // Fade out overlay
-        overlay.style.opacity = '0';
+        this.style.opacity = '0';
         
         // Start music automatically with random track
         randomizeAndPlayMusic();
         
-        // Remove overlay after animation completes
+        // Remove overlay after animation completes and show profiles
         setTimeout(() => {
-            overlay.remove();
+            this.remove();
             
             // Remove blur from main content
             document.querySelector('.container').classList.remove('blur-in');
+            
+            // Make sure all profiles are visible
+            setupAllProfiles();
         }, 1000);
     });
 }
+
 
 // Randomize and play music
 function randomizeAndPlayMusic() {
@@ -2506,9 +2535,9 @@ function setupClickRing() {
 
 // Initialize everything
 window.addEventListener('DOMContentLoaded', () => {
-    loadCustomFonts();  // Load custom font files first
-    importCustomFonts(); // Keep your existing Google Fonts import if needed
-    applyCustomFonts();  // Apply the custom fonts to elements
+  loadCustomFonts();
+    importCustomFonts();
+    applyCustomFonts();
     setFavicon();
     setSiteTitleImage();
     setSubtitleImages(); 
@@ -2518,19 +2547,29 @@ window.addEventListener('DOMContentLoaded', () => {
     applyVolumeSliderStyles();
     setupCursorMovement();
     
-    // Replace individual profile functions with our multi-profile setup
-    setupAllProfiles();
-    
+    // Update track info and setup music first
     updateTrackInfo();
     updateVolumeDisplay();
     setupMusicPlayer();
+    
+    // Setup the original profile as a placeholder
+    setProfileContent();
+    setProfileNameBackground();
+    setProfileNameImage();
+    setProfileLinks();
+    
+    // Don't actually setup multiple profiles yet - wait until after overlay click
+    // The setupAllProfiles() call will happen after click-to-enter overlay is removed
+    
     setupClickSound();
     setupHoverSound();
     setupPlayerGlow();
-    setupHoverEffects(); // Make sure this runs after setupAllProfiles
+    setupHoverEffects();
     setupClickRing();
     initializePaused();
-    setupEnterOverlay(); // This will handle the click-to-enter overlay
+    
+    // Make sure this is called AFTER all other setup
+    setupEnterOverlay();
     improveVideoSync();
     adjustSpacing();
 });
